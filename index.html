@@ -1,0 +1,3205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Mastery: OS & SDM</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Rajdhani', 'sans-serif'] },
+                    colors: {
+                        neon: {
+                            cyan: '#00f7ff',
+                            purple: '#bd00ff',
+                            green: '#39ff14',
+                            pink: '#ff0099',
+                            red: '#ff3131',
+                            yellow: '#fbbf24'
+                        }
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 10px #00f7ff, 0 0 20px rgba(0, 247, 255, 0.4)',
+                        'neon-purple': '0 0 10px #bd00ff, 0 0 20px rgba(189, 0, 255, 0.4)',
+                        'neon-green': '0 0 10px #39ff14, 0 0 20px rgba(57, 255, 20, 0.4)',
+                        'neon-pink': '0 0 10px #ff0099, 0 0 20px rgba(255, 0, 153, 0.4)',
+                        'neon-red': '0 0 10px #ff3131, 0 0 20px rgba(255, 49, 49, 0.4)',
+                        'neon-yellow': '0 0 10px #fbbf24, 0 0 20px rgba(251, 191, 36, 0.4)',
+                        'neon-strong': '0 0 15px #00f7ff, 0 0 30px rgba(0, 247, 255, 0.6), inset 0 0 10px rgba(0,247,255,0.2)'
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-neon': 'pulseNeon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'scanline': 'scanline 6s linear infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        pulseNeon: {
+                            '0%, 100%': { opacity: 1, filter: 'brightness(1)' },
+                            '50%': { opacity: .8, filter: 'brightness(1.2)' },
+                        },
+                        'gradient-x': {
+                            '0%, 100%': { 'background-position': 'left center' },
+                            '50%': { 'background-position': 'right center' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: #050a14;
+            overflow-x: hidden;
+            color: #e2e8f0;
+        }
+
+        /* Cyber Grid Overlay */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(0, 247, 255, 0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 247, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        /* Deeper Animated Background */
+        .bg-animated {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background: linear-gradient(-45deg, #000000, #1a0b2e, #0f172a, #0a011f);
+            background-size: 400% 400%;
+            animation: gradient-x 15s ease infinite;
+        }
+
+        /* Main Neon Panel Container */
+        .neon-panel {
+            background: rgba(10, 10, 20, 0.8);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(0, 247, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 247, 255, 0.15), inset 0 0 20px rgba(0, 247, 255, 0.05);
+        }
+
+        /* Neon Text Effect */
+        .text-neon-cyan { text-shadow: 0 0 10px rgba(0, 247, 255, 0.8); }
+        .text-neon-purple { text-shadow: 0 0 10px rgba(189, 0, 255, 0.8); }
+        .text-neon-green { text-shadow: 0 0 10px rgba(57, 255, 20, 0.8); }
+        .text-neon-yellow { text-shadow: 0 0 10px rgba(251, 191, 36, 0.8); }
+
+        /* Selection Card Hover */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(0, 247, 255, 0.05);
+        }
+        
+        /* Input Field Neon Focus */
+        .input-neon:focus {
+            box-shadow: 0 0 15px rgba(0, 247, 255, 0.5);
+            border-color: #00f7ff;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #00f7ff; border-radius: 20px; box-shadow: 0 0 5px #00f7ff; }
+
+        .screen-transition { animation: fadeIn Up 0.4s ease-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 font-sans selection:bg-neon-cyan selection:text-black">
+
+    <div class="bg-grid"></div>
+    <div class="bg-animated"></div>
+
+    <div class="w-full max-w-6xl neon-panel rounded-2xl overflow-hidden relative flex flex-col min-h-[750px]">
+        
+        <header class="h-24 border-b-2 border-neon-cyan/30 flex justify-between items-center px-8 bg-black/40 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-neon-cyan/5 to-transparent animate-scanline opacity-50 pointer-events-none"></div>
+
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 rounded-md border-2 border-neon-cyan flex items-center justify-center shadow-neon-cyan bg-black/50">
+                    <i class="bi bi-cpu-fill text-neon-cyan text-2xl animate-pulse-neon"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-wider text-white uppercase">TECH <span class="text-neon-cyan">NEXUS</span></h1>
+                    <p class="text-xs text-neon-cyan/70 uppercase tracking-[0.2em]">Diagnostic V.3.0</p>
+                </div>
+            </div>
+
+            <div id="header-stats" class="hidden flex items-center gap-6 relative z-10">
+                <div class="flex flex-col items-end">
+                    <span class="text-xs text-neon-purple uppercase tracking-wider">Data Points</span>
+                    <span class="text-2xl font-bold text-neon-cyan" id="current-score">0</span>
+                </div>
+                <div class="w-14 h-14 rounded-full border-[3px] border-gray-800 flex items-center justify-center relative shadow-neon-purple">
+                    <svg class="w-full h-full absolute top-0 left-0 -rotate-90">
+                        <circle cx="28" cy="28" r="24" stroke="rgba(189, 0, 255, 0.1)" stroke-width="3" fill="none"></circle>
+                        <circle id="score-circle" cx="28" cy="28" r="24" stroke="#bd00ff" stroke-width="3" fill="none" stroke-dasharray="150.8" stroke-dashoffset="150.8" class="transition-all duration-500" style="filter: drop-shadow(0 0 5px #bd00ff);"></circle>
+                    </svg>
+                    <i class="bi bi-lightning-charge-fill text-neon-cyan text-lg"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 relative overflow-y-auto overflow-x-hidden p-6 md:p-10 bg-black/20">
+            
+            <div id="welcome-screen" class="flex flex-col items-center justify-center h-full text-center screen-transition">
+                <div class="relative mb-10 animate-float">
+                    <div class="absolute inset-0 bg-neon-cyan blur-[100px] opacity-20 rounded-full"></div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/2166/2166823.png" alt="Server" class="w-48 h-48 relative z-10 drop-shadow-[0_0_30px_rgba(0,247,255,0.5)] grayscale brightness-200 contrast-125">
+                </div>
+                
+                <h2 class="text-5xl md:text-7xl font-black mb-6 uppercase tracking-tight leading-none">
+                    <span class="block text-transparent bg-clip-text bg-gradient-to-r from-white via-neon-cyan to-neon-purple text-neon-cyan">Jack In.</span>
+                    <span class="text-3xl md:text-4xl tracking-[0.3em] text-gray-300">Select Protocol.</span>
+                </h2>
+                <p class="text-lg text-gray-400 mb-12 max-w-xl font-medium leading-relaxed border-l-2 border-neon-cyan pl-4">
+                    Initialize testing sequence. Protocols available: Kernel Architecture (OS) & Software Lifecycle (SDM).
+                </p>
+                
+                <div class="w-full max-w-md space-y-6">
+                    <div class="relative group">
+                        <input type="text" id="username" placeholder="ENTER ALIAS >_" 
+                            class="input-neon relative w-full p-5 rounded-md bg-black/60 border-2 border-neon-cyan/30 text-neon-cyan placeholder-gray-600 focus:outline-none text-center text-xl font-bold tracking-widest transition-all z-10 uppercase">
+                    </div>
+                    
+                    <button onclick="goToDomainSelection()" 
+                        class="w-full py-5 rounded-md bg-gradient-to-r from-neon-cyan/20 to-neon-purple/20 border-2 border-neon-cyan text-white font-bold text-xl uppercase tracking-[0.2em] shadow-neon-cyan hover:shadow-neon-strong hover:bg-neon-cyan/30 transition-all duration-300 group relative overflow-hidden">
+                        <span class="relative z-10 flex items-center justify-center gap-4">Initialize <i class="bi bi-terminal animate-pulse-neon"></i></span>
+                        <div class="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-gradient-to-r from-transparent via-neon-cyan/40 to-transparent transition-transform duration-700 ease-in-out"></div>
+                    </button>
+                </div>
+            </div>
+
+            <div id="domain-screen" class="hidden h-full flex flex-col items-center justify-center screen-transition">
+                <h2 class="text-4xl font-black text-white uppercase tracking-wider mb-10 text-neon-cyan">Choose Subsystem</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+                    <div onclick="selectDomain('OS')" class="group cursor-pointer relative h-64 bg-black/40 border-2 border-neon-cyan/30 rounded-xl overflow-hidden hover:border-neon-cyan hover:shadow-neon-cyan transition-all duration-300 flex flex-col items-center justify-center gap-4">
+                        <div class="absolute inset-0 bg-neon-cyan/5 group-hover:bg-neon-cyan/10 transition-colors"></div>
+                        <i class="bi bi-motherboard text-6xl text-neon-cyan mb-2 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-3xl font-bold text-white uppercase tracking-widest">OS Protocol</h3>
+                        <p class="text-neon-cyan/70 font-mono tracking-widest">KERNEL ARCHITECTURE</p>
+                    </div>
+
+                    <div onclick="selectDomain('SDM')" class="group cursor-pointer relative h-64 bg-black/40 border-2 border-neon-yellow/30 rounded-xl overflow-hidden hover:border-neon-yellow hover:shadow-neon-yellow transition-all duration-300 flex flex-col items-center justify-center gap-4">
+                        <div class="absolute inset-0 bg-neon-yellow/5 group-hover:bg-neon-yellow/10 transition-colors"></div>
+                        <i class="bi bi-kanban text-6xl text-neon-yellow mb-2 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-3xl font-bold text-white uppercase tracking-widest">SDM Protocol</h3>
+                        <p class="text-neon-yellow/70 font-mono tracking-widest">SOFTWARE LIFECYCLE</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="selection-screen" class="hidden h-full flex flex-col screen-transition">
+                <div class="mb-10 border-l-4 border-neon-purple pl-4 flex justify-between items-end">
+                    <div>
+                        <h2 id="selection-title" class="text-4xl font-black text-white uppercase tracking-wider mb-2 text-neon-purple">SYSTEM OPERATIONS</h2>
+                        <p class="text-gray-400 font-medium">Welcome, <span id="display-name" class="text-neon-cyan font-bold">Admin</span>. Select data path.</p>
+                    </div>
+                    <button onclick="showScreen('domain-screen')" class="text-xs text-gray-500 hover:text-white uppercase tracking-widest border border-gray-700 px-3 py-1 rounded hover:border-neon-cyan transition-all">
+                        <i class="bi bi-arrow-left"></i> Change System
+                    </button>
+                </div>
+
+                <div id="os-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
+                    <div onclick="startLevel(1)" class="group border-2 border-neon-cyan/30 bg-black/40 p-6 rounded-lg cursor-pointer card-hover relative overflow-hidden hover:border-neon-cyan hover:shadow-neon-cyan">
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold text-white uppercase mb-2">Process Mgmt.</h3>
+                            <p class="text-sm text-gray-400">PCB, States, CPU Scheduling.</p>
+                        </div>
+                    </div>
+
+                    <div onclick="startLevel(2)" class="group border-2 border-neon-purple/30 bg-black/40 p-6 rounded-lg cursor-pointer card-hover relative overflow-hidden hover:border-neon-purple hover:shadow-neon-purple">
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold text-white uppercase mb-2">Sync & Deadlocks</h3>
+                            <p class="text-sm text-gray-400">Semaphores, Mutex, Bankers Algo.</p>
+                        </div>
+                    </div>
+
+                    <div onclick="startLevel(3)" class="group border-2 border-neon-green/30 bg-black/40 p-6 rounded-lg cursor-pointer card-hover relative overflow-hidden hover:border-neon-green hover:shadow-neon-green">
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold text-white uppercase mb-2">Memory Unit</h3>
+                            <p class="text-sm text-gray-400">Paging, Segmentation, Virtual Mem.</p>
+                        </div>
+                    </div>
+
+                    <div onclick="startLevel(4)" class="group border-2 border-neon-pink/30 bg-black/40 p-6 rounded-lg cursor-pointer card-hover relative overflow-hidden hover:border-neon-pink hover:shadow-neon-pink">
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold text-white uppercase mb-2">File Sys & I/O</h3>
+                            <p class="text-sm text-gray-400">Disk Scheduling (SCAN), RAID.</p>
+                        </div>
+                    </div>
+
+                    <div onclick="startLevel(5)" class="group border-2 border-neon-red/30 bg-black/40 p-6 rounded-lg cursor-pointer card-hover relative overflow-hidden md:col-span-2 hover:border-neon-red hover:shadow-neon-red">
+                        <div class="relative z-10 flex justify-between items-center">
+                            <div>
+                                <h3 class="text-xl font-bold text-white uppercase mb-2">Shell Core & Linux</h3>
+                                <p class="text-sm text-gray-400">Permissions, Pipes, Bash.</p>
+                            </div>
+                            <i class="bi bi-terminal-fill text-3xl text-neon-red"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sdm-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
+                    <div onclick="startLevel(1)" class="group border-2 border-neon-yellow/30 bg-black/40 p-6 rounded-lg cursor-pointer card-hover relative overflow-hidden hover:border-neon-yellow hover:shadow-neon-yellow">
+                         <div class="absolute top-0 right-0 w-20 h-20 bg-neon-yellow/10 rounded-full blur-[30px]"></div>
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold text-white uppercase mb-2">Lifecycle (SDLC)</h3>
+                            <p class="text-sm text-gray-400">Waterfall, Spiral, SRS & Design.</p>
+                        </div>
+                    </div>
+
+                    <div onclick="startLevel(2)" class="group border-2 border-neon-cyan/30 bg-black/40 p-6 rounded-lg cursor-pointer card-hover relative overflow-hidden hover:border-neon-cyan hover:shadow-neon-cyan">
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold text-white uppercase mb-2">Git & Tools</h3>
+                            <p class="text-sm text-gray-400">Commands, Merge, UML Diagrams.</p>
+                        </div>
+                    </div>
+
+                    <div onclick="startLevel(3)" class="group border-2 border-neon-pink/30 bg-black/40 p-6 rounded-lg cursor-pointer card-hover relative overflow-hidden hover:border-neon-pink hover:shadow-neon-pink">
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold text-white uppercase mb-2">Agile Methodology</h3>
+                            <p class="text-sm text-gray-400">Scrum, Sprints, Roles (PO/Master).</p>
+                        </div>
+                    </div>
+
+                    <div onclick="startLevel(4)" class="group border-2 border-neon-purple/30 bg-black/40 p-6 rounded-lg cursor-pointer card-hover relative overflow-hidden hover:border-neon-purple hover:shadow-neon-purple">
+                        <div class="relative z-10">
+                            <h3 class="text-xl font-bold text-white uppercase mb-2">DevOps Ops</h3>
+                            <p class="text-sm text-gray-400">Docker, Kubernetes, Pipelines.</p>
+                        </div>
+                    </div>
+
+                    <div onclick="startLevel(5)" class="group border-2 border-neon-green/30 bg-black/40 p-6 rounded-lg cursor-pointer card-hover relative overflow-hidden md:col-span-2 hover:border-neon-green hover:shadow-neon-green">
+                        <div class="relative z-10 flex justify-between items-center">
+                            <div>
+                                <h3 class="text-xl font-bold text-white uppercase mb-2">Testing & QA</h3>
+                                <p class="text-sm text-gray-400">Unit Testing, Selenium, CI/CD.</p>
+                            </div>
+                            <i class="bi bi-bug-fill text-3xl text-neon-green"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quiz-screen" class="hidden h-full flex flex-col screen-transition">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 border-b-2 border-neon-cyan/20 pb-4">
+                    <div>
+                        <span class="text-xs font-bold text-neon-cyan uppercase tracking-[0.2em]">Sequence No.</span>
+                        <div class="flex items-baseline gap-1 font-mono">
+                            <span id="q-number" class="text-4xl font-black text-white text-neon-cyan">01</span>
+                            <span class="text-xl text-gray-500 font-bold">/ <span id="total-q">10</span></span>
+                        </div>
+                    </div>
+
+                    <div class="bg-black/60 border border-neon-cyan/50 p-1 rounded-md flex items-center gap-2 self-start md:self-auto shadow-neon-cyan">
+                        <span class="text-[10px] font-bold text-neon-cyan uppercase px-2 tracking-wider"><i class="bi bi-translate"></i> Language:</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="lang-toggle" onchange="toggleQuestionLanguage()" class="sr-only peer">
+                            <div class="w-24 h-8 bg-black/80 border border-neon-cyan/50 peer-focus:outline-none rounded-sm peer relative overflow-hidden">
+                                <div class="absolute top-0.5 left-0.5 w-[48%] h-6 bg-neon-cyan rounded-sm text-[10px] flex items-center justify-center text-black font-bold transition-all peer-checked:translate-x-full peer-checked:bg-neon-purple peer-checked:text-black shadow-[0_0_10px_currentColor]" id="toggle-indicator">ENG</div>
+                                <div class="w-full h-full flex justify-between px-2 items-center text-[10px] font-bold text-gray-500 select-none font-mono">
+                                    <span>ENG</span>
+                                    <span>HING</span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="w-full h-2 bg-black/80 rounded-full mb-10 overflow-hidden border border-neon-cyan/30 p-[1px]">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-neon-cyan via-blue-500 to-neon-purple w-0 transition-all duration-500 ease-out shadow-[0_0_15px_#00f7ff] rounded-full relative">
+                         <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-[0_0_10px_white]"></div>
+                    </div>
+                </div>
+
+                <div class="flex-1">
+                    <h3 id="question-text" class="text-2xl md:text-3xl font-bold text-white leading-tight mb-10 min-h-[80px] tracking-wide">
+                        </h3>
+
+                    <div id="options-container" class="grid grid-cols-1 gap-4 mb-10">
+                        </div>
+
+                    <div id="explanation-box" class="hidden bg-black/60 border-2 border-neon-purple rounded-md overflow-hidden mb-6 shadow-neon-purple animate-fadeIn">
+                        <div class="bg-neon-purple/20 px-4 py-2 flex justify-between items-center border-b border-neon-purple/50">
+                            <div class="flex items-center gap-2 text-neon-purple font-bold text-sm uppercase tracking-wider">
+                                <i class="bi bi-cpu-fill animate-pulse-neon"></i> Data Insight
+                            </div>
+                            <div class="flex gap-1">
+                                <button onclick="setExpLang('en')" id="btn-en" class="text-xs font-bold px-3 py-1 rounded-sm bg-neon-purple text-black transition-colors font-mono">EN</button>
+                                <button onclick="setExpLang('hi')" id="btn-hi" class="text-xs font-bold px-3 py-1 rounded-sm text-neon-purple hover:bg-neon-purple/20 transition-colors font-mono">HI</button>
+                                <button onclick="setExpLang('mr')" id="btn-mr" class="text-xs font-bold px-3 py-1 rounded-sm text-neon-purple hover:bg-neon-purple/20 transition-colors font-mono">MR</button>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <p id="explanation-text" class="text-gray-300 text-base leading-relaxed font-medium font-mono"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-auto pt-6 flex justify-end border-t-2 border-neon-cyan/20">
+                    <button id="next-btn" onclick="nextQuestion()" disabled
+                        class="group relative px-10 py-4 rounded-md font-bold text-base uppercase tracking-[0.2em] transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-black/60 text-gray-500 border-2 border-gray-700 hover:border-neon-cyan hover:text-neon-cyan hover:shadow-neon-cyan overflow-hidden">
+                        <span class="relative z-10 flex items-center gap-3">Proceed <i class="bi bi-chevron-double-right"></i></span>
+                        <div class="absolute inset-0 bg-neon-cyan/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </button>
+                </div>
+            </div>
+
+            <div id="result-screen" class="hidden h-full flex flex-col items-center justify-center text-center screen-transition">
+                <div class="mb-12 relative">
+                    <div class="absolute inset-0 bg-neon-purple blur-[80px] opacity-40 rounded-full animate-pulse-neon"></div>
+                    <i class="bi bi-trophy-fill text-9xl text-neon-cyan drop-shadow-[0_0_30px_#00f7ff] animate-float"></i>
+                </div>
+                
+                <h2 class="text-6xl font-black text-white mb-4 tracking-tight uppercase text-neon-cyan">System Halted</h2>
+                <p class="text-2xl text-gray-400 mb-12 font-medium tracking-wider">Diagnostics Complete. Unit: <span id="result-name" class="text-neon-purple font-bold">User</span>.</p>
+                
+                <div class="grid grid-cols-2 gap-6 w-full max-w-2xl mb-12">
+                    <div class="bg-black/60 border-2 border-neon-cyan p-8 rounded-lg flex flex-col items-center justify-center shadow-neon-cyan relative overflow-hidden group">
+                         <div class="absolute inset-0 bg-neon-cyan/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <span class="text-sm text-neon-cyan uppercase tracking-[0.3em] font-bold mb-2 relative z-10">Total Score</span>
+                        <div class="text-6xl font-black text-white relative z-10 font-mono">
+                            <span id="final-score" class="text-neon-cyan">0</span><span class="text-2xl text-gray-500">/<span id="final-total">0</span></span>
+                        </div>
+                    </div>
+                    <div class="bg-black/60 border-2 border-neon-green p-8 rounded-lg flex flex-col items-center justify-center shadow-neon-green relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-neon-green/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <span class="text-sm text-neon-green uppercase tracking-[0.3em] font-bold mb-2 relative z-10">Efficiency Rate</span>
+                        <div id="score-percent" class="text-6xl font-black text-neon-green relative z-10 font-mono">0%</div>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 w-full max-w-lg">
+                    <button onclick="restartLevel()" class="flex-1 py-5 rounded-md bg-black/60 border-2 border-white/30 hover:border-neon-cyan hover:text-neon-cyan hover:shadow-neon-cyan transition-all font-bold text-lg uppercase tracking-[0.2em]">
+                        Reboot
+                    </button>
+                    <button onclick="goToDomainSelection()" class="flex-1 py-5 rounded-md bg-neon-cyan/20 border-2 border-neon-cyan text-white hover:bg-neon-cyan/40 transition-all font-bold text-lg uppercase tracking-[0.2em] shadow-neon-cyan">
+                        Root Menu
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- DATA SECTION: OS QUESTIONS ---
+        // --- OS ARRAYS (Q1 - Q125) ---
+
+// ARRAY 1: OS Basics & Structure (Q1-Q25)
+const os_part1 = [
+    { 
+        id: 1, 
+        q: "Operating System primarily acts as:", 
+        q_hi: "Operating System mukhya roop se kya kaam karta hai?", 
+        options: { a: "Application software", b: "Hardware abstraction layer", c: "Compiler", d: "Firmware" }, 
+        answer: "b", 
+        explanation: "The OS acts as an interface (abstraction layer) between the user software and the hardware.", 
+        explanation_hi: "OS user software aur hardware ke beech ek interface (pool) ka kaam karta hai.",
+        explanation_mr: "OS user software ani hardware madhe ek interface (pool) sarkhe kaam karte."
+    },
+    { 
+        id: 2, 
+        q: "OS is hardware dependent because it manages:", 
+        q_hi: "OS hardware dependent kyun hota hai?", 
+        options: { a: "Files", b: "Users", c: "Interrupts and devices", d: "Applications" }, 
+        answer: "c", 
+        explanation: "Handling interrupts and device drivers requires specific knowledge of the hardware architecture.", 
+        explanation_hi: "Interrupts aur devices ko manage karne ke liye hardware ki deep knowledge zaroori hoti hai.",
+        explanation_mr: "Interrupts ani devices manage karnyasathi hardware chi deep knowledge asne garjeche aste."
+    },
+    { 
+        id: 3, 
+        q: "System calls are executed in:", 
+        q_hi: "System calls kahan execute hote hain?", 
+        options: { a: "User mode", b: "Kernel mode", c: "Supervisor mode only", d: "BIOS mode" }, 
+        answer: "b", 
+        explanation: "System calls require privileged access, so the CPU switches to Kernel mode.", 
+        explanation_hi: "System calls ko special power chahiye hoti hai, isliye wo Kernel mode mein chalte hain.",
+        explanation_mr: "System calls la special power lagte, mhanun te Kernel mode madhe chalat."
+    },
+    { 
+        id: 4, 
+        q: "Which transition occurs during a system call?", 
+        q_hi: "System call ke dauran kaunsa badlav aata hai?", 
+        options: { a: "Process switch", b: "Thread switch", c: "Mode switch", d: "Context switch only" }, 
+        answer: "c", 
+        explanation: "The CPU switches from User Mode to Kernel Mode to perform the task.", 
+        explanation_hi: "CPU apna mode badal kar User se Kernel mode mein jaata hai.",
+        explanation_mr: "CPU apla mode badlun User madhun Kernel mode madhe jate."
+    },
+    { 
+        id: 5, 
+        q: "Which is NOT an OS function?", 
+        q_hi: "Ismein se kaunsa OS ka kaam nahi hai?", 
+        options: { a: "Process scheduling", b: "Memory management", c: "Program compilation", d: "File management" }, 
+        answer: "c", 
+        explanation: "Compilation is done by a Compiler, not the Operating System.", 
+        explanation_hi: "Code ko compile karna Compiler ka kaam hai, OS ka nahi.",
+        explanation_mr: "Code compile karne he Compiler che kaam ahe, OS che nahi."
+    },
+    { 
+        id: 6, 
+        q: "Which command displays currently running processes?", 
+        q_hi: "Kaunsi command chalti hui processes dikhati hai?", 
+        options: { a: "top", b: "ls", c: "grep", d: "chmod" }, 
+        answer: "a", 
+        explanation: "'top' provides a dynamic real-time view of running system processes.", 
+        explanation_hi: "'top' command screen par saari running processes ko live dikhati hai.",
+        explanation_mr: "'top' command screen var sarva running processes live dakhavte."
+    },
+    { 
+        id: 7, 
+        q: "Meaning of permission chmod 754 file.txt", 
+        q_hi: "chmod 754 ka kya matlab hai?", 
+        options: { a: "rwx r-x r--", b: "rwx r-- r--", c: "rw- r-x r--", d: "rwx rwx r--" }, 
+        answer: "a", 
+        explanation: "7 (rwx) for User, 5 (r-x) for Group, 4 (r--) for Others.", 
+        explanation_hi: "User ko sab power (7), Group ko read-execute (5), Others ko sirf read (4).",
+        explanation_mr: "User la sagli power (7), Group la read-execute (5), Others la fakta read (4)."
+    },
+    { 
+        id: 8, 
+        q: "$PS1 in Linux represents:", 
+        q_hi: "Linux mein $PS1 kya dikhata hai?", 
+        options: { a: "Process state", b: "Primary shell prompt", c: "Shell path", d: "Parent shell" }, 
+        answer: "b", 
+        explanation: "PS1 is the environment variable that defines the look of your command prompt.", 
+        explanation_hi: "Ye aapke terminal ke prompt (jahan command likhte hain) ka design set karta hai.",
+        explanation_mr: "He tumchya terminal chya prompt (jithe command lihlita) che design tharavte."
+    },
+    { 
+        id: 9, 
+        q: "Pipe (|) operator is used for:", 
+        q_hi: "Pipe (|) operator kiske liye use hota hai?", 
+        options: { a: "Redirection", b: "Background execution", c: "Chaining command output", d: "File permission" }, 
+        answer: "c", 
+        explanation: "It takes the output of the first command and uses it as input for the second command.", 
+        explanation_hi: "Pehli command ka result doosri command ko bhejne ke liye use hota hai.",
+        explanation_mr: "Pahilya command cha result dusrya command la pathavnyasathi vaparle jate."
+    },
+    { 
+        id: 10, 
+        q: "Which shell supports advanced scripting by default?", 
+        q_hi: "Advanced scripting ke liye kaunsa shell best hai?", 
+        options: { a: "sh", b: "bash", c: "dash", d: "fish" }, 
+        answer: "b", 
+        explanation: "Bash (Bourne Again SHell) is the default and most feature-rich shell for scripting.", 
+        explanation_hi: "Bash scripting ke liye sabse zyada use hone wala powerful shell hai.",
+        explanation_mr: "Bash scripting sathi sarvat jast vaparla janara powerful shell ahe."
+    },
+    { 
+        id: 11, 
+        q: "A process differs from a thread because a process has:", 
+        q_hi: "Process aur Thread mein kya farak hai?", 
+        options: { a: "Separate registers", b: "Separate address space", c: "Faster execution", d: "No scheduling" }, 
+        answer: "b", 
+        explanation: "Processes are isolated with their own memory, while threads share memory.", 
+        explanation_hi: "Process ki apni alag memory hoti hai, jabki threads memory share karte hain.",
+        explanation_mr: "Process chi swatahachi vegli memory aste, pan threads memory share kartat."
+    },
+    { 
+        id: 12, 
+        q: "Which system call creates a new process?", 
+        q_hi: "Nayi process banane ke liye kaunsi call use hoti hai?", 
+        options: { a: "exec()", b: "fork()", c: "wait()", d: "exit()" }, 
+        answer: "b", 
+        explanation: "fork() creates an exact duplicate (child) of the calling process.", 
+        explanation_hi: "fork() current process ki ek duplicate copy (child) banata hai.",
+        explanation_mr: "fork() current process chi ek duplicate copy (child) banavte."
+    },
+    { 
+        id: 13, 
+        q: "exec() system call:", 
+        q_hi: "exec() system call kya karta hai?", 
+        options: { a: "Creates new process", b: "Replaces process image", c: "Terminates parent", d: "Waits for child" }, 
+        answer: "b", 
+        explanation: "exec() replaces the current process memory with a new program to run.", 
+        explanation_hi: "Ye purani process ko hata kar nayi program run karta hai.",
+        explanation_mr: "He junya process la kadhun navin program run karte."
+    },
+    { 
+        id: 14, 
+        q: "A zombie process exists when:", 
+        q_hi: "Zombie process kab banti hai?", 
+        options: { a: "Parent terminates first", b: "Child is running", c: "Child terminates but parent doesn’t wait", d: "Kernel crashes" }, 
+        answer: "c", 
+        explanation: "The child has finished execution but the parent hasn't read its exit status yet.", 
+        explanation_hi: "Jab child khatam ho jaye par parent ne uska status check nahi kiya ho.",
+        explanation_mr: "Jevha child sampte pan parent ne tyacha status check kela nasto."
+    },
+    { 
+        id: 15, 
+        q: "Orphan process is adopted by:", 
+        q_hi: "Orphan process ko kaun adopt karta hai?", 
+        options: { a: "Shell", b: "Kernel thread", c: "init/systemd", d: "Scheduler" }, 
+        answer: "c", 
+        explanation: "If a parent dies, the 'init' process (PID 1) becomes the new parent.", 
+        explanation_hi: "Agar parent process band ho jaye, to 'init' process child ko sambhal leti hai.",
+        explanation_mr: "Jar parent process band zali, tar 'init' process child la sambhalte."
+    },
+    { 
+        id: 16, 
+        q: "FCFS scheduling problem is:", 
+        q_hi: "FCFS scheduling mein kya dikkat hai?", 
+        options: { a: "Starvation", b: "Convoy effect", c: "Deadlock", d: "Thrashing" }, 
+        answer: "b", 
+        explanation: "Short processes get stuck waiting behind a long CPU-intensive process (Convoy Effect).", 
+        explanation_hi: "Chhoti processes ko ek badi process ke peeche lamba intezaar karna padta hai.",
+        explanation_mr: "Chotya processes na ek mothya process chya mage khup vel vaat pahavi lagte."
+    },
+    { 
+        id: 17, 
+        q: "Which scheduling algorithm is preemptive?", 
+        q_hi: "Kaunsa algorithm beech mein rok kar doosra chala sakta hai?", 
+        options: { a: "FCFS", b: "Non-preemptive SJF", c: "Priority (preemptive)", d: "Batch" }, 
+        answer: "c", 
+        explanation: "Preemptive Priority scheduling can pause a running task if a higher priority task comes.", 
+        explanation_hi: "Agar koi zaroori kaam aaye, to ye current kaam ko rok kar use chala deta hai.",
+        explanation_mr: "Jar kahi mahatvache kaam ale, tar he chalu kaam थांबवून tyala chalavte."
+    },
+    { 
+        id: 18, 
+        q: "Round Robin scheduling is best suited for:", 
+        q_hi: "Round Robin kiske liye sabse accha hai?", 
+        options: { a: "Batch systems", b: "Real-time systems", c: "Time-sharing systems", d: "Embedded systems" }, 
+        answer: "c", 
+        explanation: "RR gives every user/process a fair small slice of CPU time, ideal for multitasking.", 
+        explanation_hi: "Ye sabko barabar time deta hai, isliye multitasking (Time-sharing) ke liye best hai.",
+        explanation_mr: "He saglyanna saman vel dete, mhanun he multitasking sathi best ahe."
+    },
+    { 
+        id: 19, 
+        q: "SJF scheduling minimizes:", 
+        q_hi: "SJF scheduling kya kam karta hai?", 
+        options: { a: "Turnaround time", b: "Waiting time", c: "Response time", d: "Burst time" }, 
+        answer: "b", 
+        explanation: "Shortest Job First is mathematically proven to have the lowest average waiting time.", 
+        explanation_hi: "Isse processes ka intezaar karne ka time sabse kam ho jata hai.",
+        explanation_mr: "Yamule processes cha vaat pahanyacha vel sarvat kami hoto."
+    },
+    { 
+        id: 20, 
+        q: "Which scheduler controls degree of multiprogramming?", 
+        q_hi: "Kaunsa scheduler decide karta hai kitni process memory mein hongi?", 
+        options: { a: "Short-term", b: "Medium-term", c: "Long-term", d: "Dispatcher" }, 
+        answer: "c", 
+        explanation: "Long-term scheduler decides which jobs are brought into the ready queue.", 
+        explanation_hi: "Ye decide karta hai ki kitne programs ek saath memory mein load honge.",
+        explanation_mr: "He tharavte ki kiti programs ekach veli memory madhe load hotil."
+    },
+    { 
+        id: 21, 
+        q: "fork(); fork(); printf('X'); How many times is X printed?", 
+        q_hi: "fork(); fork(); printf('X'); X kitni baar print hoga?", 
+        options: { a: "2", b: "3", c: "4", d: "1" }, 
+        answer: "c", 
+        explanation: "2 forks create 2^n processes. 2^2 = 4 processes. Each prints X once.", 
+        explanation_hi: "2 fork calls se total 4 processes banengi, aur charon 'X' print karengi.",
+        explanation_mr: "2 fork calls mule total 4 processes bantila, ani charhi 'X' print kartil."
+    },
+    { 
+        id: 22, 
+        q: "if(fork()==0) fork(); printf('A'); Output count?", 
+        q_hi: "Is code mein 'A' kitni baar print hoga?", 
+        options: { a: "1", b: "2", c: "3", d: "4" }, 
+        answer: "c", 
+        explanation: "Parent(1), Child1(1) -> Child1 forks Child2. Total 3 processes reach printf.", 
+        explanation_hi: "Total 3 processes banengi jo 'printf' line tak pahunchengi.",
+        explanation_mr: "Total 3 processes bantila je 'printf' line paryant pochatil."
+    },
+    { 
+        id: 23, 
+        q: "Paging eliminates:", 
+        q_hi: "Paging kis problem ko khatam karta hai?", 
+        options: { a: "Internal fragmentation", b: "External fragmentation", c: "Both", d: "None" }, 
+        answer: "b", 
+        explanation: "Paging allows non-contiguous memory allocation, solving external fragmentation.", 
+        explanation_hi: "Paging se memory ke beech mein khali jagah (holes) ki problem khatam ho jati hai.",
+        explanation_mr: "Paging mule memory chya madhe rikami jaga (holes) chi problem sampte."
+    },
+    { 
+        id: 24, 
+        q: "Segmentation suffers from:", 
+        q_hi: "Segmentation mein kaunsi dikkat aati hai?", 
+        options: { a: "Internal fragmentation", b: "External fragmentation", c: "No fragmentation", d: "Thrashing" }, 
+        answer: "b", 
+        explanation: "Variable sized segments leave scattered holes in memory (External Fragmentation).", 
+        explanation_hi: "Ismein memory ke alag-alag tukde (holes) bach jaate hain jo use nahi ho paate.",
+        explanation_mr: "Yat memory che vegvegle tukde (holes) shillak rahtat je vaparta yet nahit."
+    },
+    { 
+        id: 25, 
+        q: "Best Fit algorithm leads to:", 
+        q_hi: "Best Fit algorithm se kya hota hai?", 
+        options: { a: "High internal fragmentation", b: "High external fragmentation", c: "No fragmentation", d: "Deadlock" }, 
+        answer: "b", 
+        explanation: "It creates very tiny, unusable holes in memory, leading to external fragmentation.", 
+        explanation_hi: "Ye memory mein bahut chhote-chhote gaps chhod deta hai jo kisi kaam ke nahi hote.",
+        explanation_mr: "He memory madhe khup chote-chote gaps sodte je konatyach kaamache nastat."
+    }
+];
+
+// ARRAY 2: Scheduling & Memory II (Q26-Q50)
+const os_part2 = [
+    { 
+        id: 26, 
+        q: "Compaction is used to reduce:", 
+        q_hi: "Compaction kisko kam karne ke liye use hota hai?", 
+        options: { a: "Internal fragmentation", b: "External fragmentation", c: "Page faults", d: "Thrashing" }, 
+        answer: "b", 
+        explanation: "It shifts memory contents to place all free memory together in one large block.", 
+        explanation_hi: "Ye memory ko hilakar saari khali jagah ek saath kar deta hai.",
+        explanation_mr: "He memory halvlun sagli rikami jaga ekatra karte."
+    },
+    { 
+        id: 27, 
+        q: "Page fault occurs when:", 
+        q_hi: "Page fault kab hota hai?", 
+        options: { a: "Page is in cache", b: "Page is in TLB", c: "Page is not in memory", d: "Disk fails" }, 
+        answer: "c", 
+        explanation: "It happens when the CPU requests a page that is not currently loaded in RAM.", 
+        explanation_hi: "Jab CPU wo page maange jo RAM mein hai hi nahi.",
+        explanation_mr: "Jevha CPU te page magte je RAM madhe nahi ahe."
+    },
+    { 
+        id: 28, 
+        q: "TLB improves performance by reducing:", 
+        q_hi: "TLB kya kam karke speed badhata hai?", 
+        options: { a: "Disk I/O", b: "Page faults", c: "Address translation time", d: "Context switch time" }, 
+        answer: "c", 
+        explanation: "TLB caches recent address translations, skipping the page table lookup.", 
+        explanation_hi: "Ye address dhundne ka time bachata hai kyunki ye recent addresses yaad rakhta hai.",
+        explanation_mr: "He address shodnyacha vel vachavte karan he recent addresses lakshat thevte."
+    },
+    { 
+        id: 29, 
+        q: "Dirty bit indicates:", 
+        q_hi: "Dirty bit kya dikhata hai?", 
+        options: { a: "Page reference", b: "Page modification", c: "Page validity", d: "Page fault" }, 
+        answer: "b", 
+        explanation: "It indicates that the page has been modified and needs to be saved to disk.", 
+        explanation_hi: "Iska matlab page mein kuch badlav (edit) hua hai aur save karna zaroori hai.",
+        explanation_mr: "Yacha arth page madhe kahiteri badal (edit) zala ahe ani save karne garjeche ahe."
+    },
+    { 
+        id: 30, 
+        q: "Belady’s anomaly occurs in:", 
+        q_hi: "Belady’s anomaly kisme hoti hai?", 
+        options: { a: "LRU", b: "FIFO", c: "Optimal", d: "LFU" }, 
+        answer: "b", 
+        explanation: "In FIFO, increasing memory frames can paradoxically increase page faults.", 
+        explanation_hi: "FIFO mein kabhi-kabhi zyada memory dene par bhi performance kharab ho jati hai.",
+        explanation_mr: "FIFO madhe kadhi-kadhi jast memory dilyavar pan performance kharab hote."
+    },
+    { 
+        id: 31, 
+        q: "Which is NOT a necessary deadlock condition?", 
+        q_hi: "Deadlock ke liye kaunsi shart zaroori nahi hai?", 
+        options: { a: "Mutual exclusion", b: "Hold and wait", c: "Circular wait", d: "Starvation" }, 
+        answer: "d", 
+        explanation: "Starvation is a side effect, not a mandatory condition for deadlock to happen.", 
+        explanation_hi: "Starvation deadlock hone ki shart nahi hai, bas ek alag problem hai.",
+        explanation_mr: "Starvation deadlock honyachi att nahi, ti ek vegli problem ahe."
+    },
+    { 
+        id: 32, 
+        q: "Semaphore value -3 means:", 
+        q_hi: "Agar Semaphore ki value -3 hai to iska kya matlab?", 
+        options: { a: "3 free resources", b: "3 blocked processes", c: "Deadlock state", d: "Mutex unlocked" }, 
+        answer: "b", 
+        explanation: "A negative semaphore value indicates the number of processes waiting in the queue.", 
+        explanation_hi: "Negative value ka matlab hai ki 3 process line mein wait kar rahi hain.",
+        explanation_mr: "Negative value cha arth ahe ki 3 process line madhe vaat pahat ahet."
+    },
+    { 
+        id: 33, 
+        q: "Mutex differs from semaphore because mutex:", 
+        q_hi: "Mutex semaphore se alag kyun hai?", 
+        options: { a: "Is counting", b: "Has ownership", c: "Allows multiple access", d: "Causes starvation" }, 
+        answer: "b", 
+        explanation: "Mutex implies ownership: only the thread that locked it can unlock it.", 
+        explanation_hi: "Mutex mein 'Malikana Haq' hota hai; jisne lock lagaya wahi khol sakta hai.",
+        explanation_mr: "Mutex madhe 'Maliki Hakka' asto; jyane lock lavle toach ughdu shakto."
+    },
+    { 
+        id: 34, 
+        q: "Producer-Consumer problem uses:", 
+        q_hi: "Producer-Consumer problem mein kya use hota hai?", 
+        options: { a: "Paging", b: "Semaphore", c: "Scheduling", d: "Thrashing" }, 
+        answer: "b", 
+        explanation: "Semaphores are used to synchronize the producer and consumer and avoid buffer issues.", 
+        explanation_hi: "Dono ke beech taalmel (sync) bithane ke liye Semaphore use hota hai.",
+        explanation_mr: "Doghan madhe taalmel (sync) thevnyasathi Semaphore vaparle jate."
+    },
+    { 
+        id: 35, 
+        q: "Thrashing is caused by:", 
+        q_hi: "Thrashing kis wajah se hoti hai?", 
+        options: { a: "High CPU speed", b: "Excessive page faults", c: "Deadlock", d: "I/O failure" }, 
+        answer: "b", 
+        explanation: "When the system spends more time swapping pages than executing tasks.", 
+        explanation_hi: "Jab computer kaam karne se zyada memory badalne (swapping) mein busy rahe.",
+        explanation_mr: "Jevha computer kaam karnyapeksha memory badalnyat (swapping) vyasta aste."
+    },
+    { 
+        id: 36, 
+        q: "Context switch saves:", 
+        q_hi: "Context switch kya save karta hai?", 
+        options: { a: "Disk state", b: "CPU registers", c: "Cache memory", d: "Page table only" }, 
+        answer: "b", 
+        explanation: "It saves the current state of CPU registers so the process can resume later.", 
+        explanation_hi: "Ye CPU ki current halat (registers) ko save karta hai taaki baad mein wahi se shuru ho.",
+        explanation_mr: "He CPU chi current sthiti (registers) save karte jyamyule nantr tithunach suru hoil."
+    },
+    { 
+        id: 37, 
+        q: "Real-time OS focuses mainly on:", 
+        q_hi: "Real-time OS ka main focus kya hai?", 
+        options: { a: "Throughput", b: "Response time", c: "CPU utilization", d: "Fairness" }, 
+        answer: "b", 
+        explanation: "RTOS must respond to events within a fixed, strict time limit.", 
+        explanation_hi: "Iska main kaam hai turant jawaab dena (fast response time).",
+        explanation_mr: "Yache mukhya kaam ahe lagach uttar dene (fast response time)."
+    },
+    { 
+        id: 38, 
+        q: "Which is NOT a real-time OS?", 
+        q_hi: "Inmein se kaunsa Real-time OS nahi hai?", 
+        options: { a: "QNX", b: "VxWorks", c: "Linux", d: "RTLinux" }, 
+        answer: "c", 
+        explanation: "Standard Linux is a general-purpose OS, not strictly Real-Time.", 
+        explanation_hi: "Normal Linux ek aam OS hai, ye real-time guarantee nahi deta.",
+        explanation_mr: "Normal Linux he ek samanya OS ahe, he real-time guarantee det nahi."
+    },
+    { 
+        id: 39, 
+        q: "Which command terminates a process?", 
+        q_hi: "Process ko band karne ki command?", 
+        options: { a: "kill", b: "ps", c: "top", d: "nice" }, 
+        answer: "a", 
+        explanation: "The 'kill' command sends a signal to terminate a process.", 
+        explanation_hi: "'kill' command kisi bhi chalti hui process ko band kar sakti hai.",
+        explanation_mr: "'kill' command konatyahi chalu process la band karu shakte."
+    },
+    { 
+        id: 40, 
+        q: "Kernel space is protected to:", 
+        q_hi: "Kernel space ko protect kyun kiya jata hai?", 
+        options: { a: "Increase speed", b: "Prevent user misuse", c: "Save memory", d: "Reduce I/O" }, 
+        answer: "b", 
+        explanation: "To prevent user programs from crashing the system or accessing unauthorized hardware.", 
+        explanation_hi: "Taaki user galti se pure computer ko crash na kar de.",
+        explanation_mr: "Jyamyule user chukun purna computer crash karnar nahi."
+    },
+    { 
+        id: 41, 
+        q: "Starvation is commonly caused by:", 
+        q_hi: "Starvation kis wajah se hoti hai?", 
+        options: { a: "FCFS", b: "Priority scheduling", c: "Paging", d: "FIFO replacement" }, 
+        answer: "b", 
+        explanation: "Low priority processes may wait forever if high priority tasks keep coming.", 
+        explanation_hi: "Agar sirf VVIP (High Priority) logon ko jagah milegi, to aam log (Low Priority) wait karte rahenge.",
+        explanation_mr: "Jar fakta VVIP (High Priority) lokanna jaga milel, tar samanya lok (Low Priority) vaat pahat rahtil."
+    },
+    { 
+        id: 42, 
+        q: "Aging technique is used to prevent:", 
+        q_hi: "Aging technique kisko rokne ke liye use hoti hai?", 
+        options: { a: "Deadlock", b: "Thrashing", c: "Starvation", d: "Fragmentation" }, 
+        answer: "c", 
+        explanation: "It gradually increases the priority of waiting processes so they eventually run.", 
+        explanation_hi: "Ye intezaar karne walon ki priority dheere-dheere badhata hai taaki Starvation na ho.",
+        explanation_mr: "He vaat pahnaryanchi priority halu-halu vadhavte jyamyule Starvation honar nahi."
+    },
+    { 
+        id: 43, 
+        q: "Medium-term scheduler mainly handles:", 
+        q_hi: "Medium-term scheduler kya sambhalta hai?", 
+        options: { a: "CPU allocation", b: "Swapping", c: "Job admission", d: "Interrupts" }, 
+        answer: "b", 
+        explanation: "It swaps processes out of memory to disk to manage load.", 
+        explanation_hi: "Ye processes ko RAM se nikal kar Disk mein bhejta hai (Swapping).",
+        explanation_mr: "He processes na RAM madhun kadhun Disk madhe pathavte (Swapping)."
+    },
+    { 
+        id: 44, 
+        q: "Which OS structure offers highest modularity?", 
+        q_hi: "Kaunsa OS design sabse zyada modular hai?", 
+        options: { a: "Monolithic", b: "Microkernel", c: "Simple", d: "Batch" }, 
+        answer: "b", 
+        explanation: "Microkernels keep the core small and run services as separate modules.", 
+        explanation_hi: "Microkernel mein har service alag tukde (module) mein hoti hai, jo safe aur modular hai.",
+        explanation_mr: "Microkernel madhe pratyek service veglya tukdyat (module) aste, je safe ani modular ahe."
+    },
+    { 
+        id: 45, 
+        q: "Which file stores inode information?", 
+        q_hi: "Inode ki jankari kahan store hoti hai (Context: mapping)?", 
+        options: { a: "Superblock", b: "Directory", c: "Data block", d: "Boot block" }, 
+        answer: "b", 
+        explanation: "A Directory file stores the mapping of Filenames to Inode numbers.", 
+        explanation_hi: "Directory file mein naam aur Inode number ka link hota hai.",
+        explanation_mr: "Directory file madhe naav ani Inode number cha link asto."
+    },
+    { 
+        id: 46, 
+        q: "Which algorithm replaces the page not used for longest time?", 
+        q_hi: "Kaunsa algorithm us page ko hatata hai jo bahut der se use nahi hua?", 
+        options: { a: "FIFO", b: "LFU", c: "LRU", d: "Optimal" }, 
+        answer: "c", 
+        explanation: "LRU (Least Recently Used) removes the page untouched for the longest duration.", 
+        explanation_hi: "LRU us page ko nikalta hai jo sabse purana ho gaya hai use hue.",
+        explanation_mr: "LRU tya page la kadhte je vaprun khup vel zala ahe."
+    },
+    { 
+        id: 47, 
+        q: "Which scheduling may cause starvation?", 
+        q_hi: "Kis scheduling mein starvation ho sakta hai?", 
+        options: { a: "FCFS", b: "RR", c: "Priority", d: "Multilevel queue" }, 
+        answer: "c", 
+        explanation: "In Priority scheduling, low priority tasks may never execute.", 
+        explanation_hi: "Priority wale mein kam priority wale tasks hamesha wait karte reh sakte hain.",
+        explanation_mr: "Priority walyat kami priority wale tasks nehami vaat pahat rahu shaktat."
+    },
+    { 
+        id: 48, 
+        q: "Which bit indicates page presence in memory?", 
+        q_hi: "Kaunsa bit batata hai ki page memory mein hai ya nahi?", 
+        options: { a: "Dirty", b: "Valid", c: "Reference", d: "Modify" }, 
+        answer: "b", 
+        explanation: "The Valid/Invalid bit tells if a page is currently loaded in RAM.", 
+        explanation_hi: "Valid bit batata hai ki page RAM mein मौजूद hai.",
+        explanation_mr: "Valid bit sangte ki page RAM madhe ahe."
+    },
+    { 
+        id: 49, 
+        q: "Which Linux command changes file ownership?", 
+        q_hi: "File ka maalik (owner) badalne ke liye command?", 
+        options: { a: "chmod", b: "chown", c: "u mask", d: "ls" }, 
+        answer: "b", 
+        explanation: "'chown' (Change Owner) is used to change file ownership.", 
+        explanation_hi: "'chown' se hum file ka owner badal sakte hain.",
+        explanation_mr: "'chown' ne apan file cha owner badlu shakto."
+    },
+    { 
+        id: 50, 
+        q: "Which OS supports deterministic deadlines?", 
+        q_hi: "Kaunsa OS fix time (deadline) par kaam pura karne ki guarantee deta hai?", 
+        options: { a: "Windows", b: "UNIX", c: "RTOS", d: "Linux" }, 
+        answer: "c", 
+        explanation: "RTOS guarantees that critical tasks complete within a defined time.", 
+        explanation_hi: "RTOS guarantee deta hai ki kaam diye gaye time mein pura hoga.",
+        explanation_mr: "RTOS guarantee dete ki kaam dilelya velet purna hoil."
+    }
+];
+
+// ARRAY 3: Advanced Scheduling & Memory (Q51-Q75)
+const os_part3 = [
+    { 
+        id: 51, 
+        q: "In Round Robin, very large time quantum makes it similar to:", 
+        q_hi: "Agar RR mein time limit bahut bada kar dein, to wo kaisa ban jayega?", 
+        options: { a: "SJF", b: "Priority", c: "FCFS", d: "Multilevel Queue" }, 
+        answer: "c", 
+        explanation: "If the time slice is huge, processes finish one by one, just like FCFS.", 
+        explanation_hi: "Agar time limit bahut badi ho, to ye 'Jo pehle aaya wo pehle gaya' (FCFS) ban jata hai.",
+        explanation_mr: "Jar time limit khup mothi asel, tar he 'Je pahile ale te pahile gele' (FCFS) bante."
+    },
+    { 
+        id: 52, 
+        q: "Which scheduling algorithm may cause starvation?", 
+        q_hi: "Kisme starvation hone ka darr hai?", 
+        options: { a: "FCFS", b: "Round Robin", c: "Priority", d: "FIFO" }, 
+        answer: "c", 
+        explanation: "Low priority processes might strictly wait forever.", 
+        explanation_hi: "Priority scheduling mein gareeb (low priority) process bhookhi reh sakti hai.",
+        explanation_mr: "Priority scheduling madhe low priority process upashi rahu shakte."
+    },
+    { 
+        id: 53, 
+        q: "Preemptive SJF is also known as:", 
+        q_hi: "Preemptive SJF ko aur kya kehte hain?", 
+        options: { a: "Shortest Remaining Time First", b: "FCFS", c: "Multilevel Queue", d: "HRRN" }, 
+        answer: "a", 
+        explanation: "SRTF is the preemptive version of SJF.", 
+        explanation_hi: "Ise SRTF (Shortest Remaining Time First) bhi kehte hain.",
+        explanation_mr: "Yala SRTF (Shortest Remaining Time First) pan mhantat."
+    },
+    { 
+        id: 54, 
+        q: "Which scheduling algorithm is best for minimizing response time?", 
+        q_hi: "Response time kam karne ke liye sabse accha kaunsa hai?", 
+        options: { a: "FCFS", b: "SJF", c: "Round Robin", d: "Priority" }, 
+        answer: "c", 
+        explanation: "Round Robin is designed to give quick responses to interactive users.", 
+        explanation_hi: "Round Robin turant jawaab dene (interactive systems) ke liye best hai.",
+        explanation_mr: "Round Robin lagach uttar denyasathi (interactive systems) best ahe."
+    },
+    { 
+        id: 55, 
+        q: "Dispatcher is responsible for:", 
+        q_hi: "Dispatcher ka kya kaam hai?", 
+        options: { a: "Selecting process", b: "Allocating memory", c: "Context switching", d: "Job admission" }, 
+        answer: "c", 
+        explanation: "The dispatcher performs the actual context switch to give CPU to the selected process.", 
+        explanation_hi: "Ye process ko CPU saunpta hai (Context Switch karta hai).",
+        explanation_mr: "He process la CPU dete (Context Switch karte)."
+    },
+    { 
+        id: 56, 
+        q: "Threads within same process share:", 
+        q_hi: "Ek hi process ke threads kya share karte hain?", 
+        options: { a: "Registers", b: "Stack", c: "Address space", d: "Program counter" }, 
+        answer: "c", 
+        explanation: "Threads share the code, data, and address space, but have their own stack/registers.", 
+        explanation_hi: "Threads ghar (Address space) share karte hain, par apna apna bistar (stack) alag rakhte hain.",
+        explanation_mr: "Threads ghar (Address space) share kartat, pan swatahacha bistara (stack) vegla thevtat."
+    },
+    { 
+        id: 57, 
+        q: "Which system call suspends execution of parent until child exits?", 
+        q_hi: "Kaunsa call parent ko rok deta hai jab tak child khatam na ho?", 
+        options: { a: "fork()", b: "exec()", c: "wait()", d: "kill()" }, 
+        answer: "c", 
+        explanation: "wait() blocks the parent until the child process finishes.", 
+        explanation_hi: "wait() parent ko bolta hai 'Ruko, bachhe ko khatam karne do'.",
+        explanation_mr: "wait() parent la sangte 'Thamba, mulala sampvu dya'."
+    },
+    { 
+        id: 58, 
+        q: "What happens if parent terminates before child?", 
+        q_hi: "Agar parent pehle mar jaye to child ka kya hoga?", 
+        options: { a: "Child becomes zombie", b: "Child becomes orphan", c: "Child terminates", d: "Kernel panic" }, 
+        answer: "b", 
+        explanation: "The child becomes an Orphan and is usually adopted by the 'init' process.", 
+        explanation_hi: "Child 'Anath' (Orphan) ban jata hai.",
+        explanation_mr: "Child 'Anath' (Orphan) bante."
+    },
+    { 
+        id: 59, 
+        q: "Which of the following is NOT a process state?", 
+        q_hi: "Inmein se kaunsi process ki state nahi hai?", 
+        options: { a: "Ready", b: "Running", c: "Waiting", d: "Executing" }, 
+        answer: "d", 
+        explanation: "'Executing' is an action, not a formal state. The formal state is 'Running'.", 
+        explanation_hi: "'Executing' koi official state nahi hai, sahi shabd 'Running' hai.",
+        explanation_mr: "'Executing' konti official state nahi, khara shabd 'Running' ahe."
+    },
+    { 
+        id: 60, 
+        q: "Context switching overhead mainly affects:", 
+        q_hi: "Context switching se kis cheez ka nuksan hota hai?", 
+        options: { a: "CPU utilization", b: "Disk I/O", c: "Memory usage", d: "File system" }, 
+        answer: "a", 
+        explanation: "Time spent switching is time not spent doing useful work, wasting CPU cycles.", 
+        explanation_hi: "Bar-bar switch karne mein CPU ka time barbaad hota hai.",
+        explanation_mr: "Varanvar switch karnyamahe CPU cha vel vaya jato."
+    },
+    { 
+        id: 61, 
+        q: "fork(); print A; fork(); print B; How many B's printed?", 
+        q_hi: "fork(); print A; fork(); print B; 'B' kitni baar print hoga?", 
+        options: { a: "1", b: "2", c: "3", d: "4" }, 
+        answer: "d", 
+        explanation: "1st fork=2 procs. Both print A. 2nd fork=Each creates child(2*2=4). All 4 print B.", 
+        explanation_hi: "Total 4 processes banengi jo aakhri line tak pahunchengi, isliye 4 baar B.",
+        explanation_mr: "Total 4 processes bantila je shevtachya line paryant pochatil, mhanun 4 vela B."
+    },
+    { 
+        id: 62, 
+        q: "if(fork()) print X else print Y. Which is TRUE?", 
+        q_hi: "if(fork()) print X else print Y. Kya print hoga?", 
+        options: { a: "X printed once", b: "Y printed once", c: "X and Y printed once each", d: "X printed twice" }, 
+        answer: "c", 
+        explanation: "Parent gets PID (>0) -> prints X. Child gets 0 -> prints Y. Both run.", 
+        explanation_hi: "Parent X print karega aur Child Y print karega.",
+        explanation_mr: "Parent X print karel ani Child Y print karel."
+    },
+    { 
+        id: 63, 
+        q: "Internal fragmentation occurs in:", 
+        q_hi: "Internal fragmentation kisme hoti hai?", 
+        options: { a: "Segmentation", b: "Paging", c: "Dynamic partitioning", d: "Swapping" }, 
+        answer: "b", 
+        explanation: "In Paging, the last page of a process may not be fully used, wasting space inside.", 
+        explanation_hi: "Paging mein aakhri page poora nahi bharta, to andar jagah bach jati hai.",
+        explanation_mr: "Paging madhe shevtacha page purna bharat nahi, mhanun aat madhe jaga shillak rahte."
+    },
+    { 
+        id: 64, 
+        q: "External fragmentation occurs in:", 
+        q_hi: "External fragmentation kisme hoti hai?", 
+        options: { a: "Paging", b: "Fixed partitioning", c: "Segmentation", d: "Demand paging" }, 
+        answer: "c", 
+        explanation: "Segmentation leaves scattered holes between segments.", 
+        explanation_hi: "Segmentation mein tukdo ke beech mein jagah chhoot jati hai.",
+        explanation_mr: "Segmentation madhe tukdyanchya madhe jaga sutte."
+    },
+    { 
+        id: 65, 
+        q: "Worst Fit strategy chooses:", 
+        q_hi: "Worst Fit strategy kya chunti hai?", 
+        options: { a: "Smallest hole", b: "Largest hole", c: "Exact hole", d: "Random hole" }, 
+        answer: "b", 
+        explanation: "It puts the process in the largest available memory hole.", 
+        explanation_hi: "Ye sabse bade khali dibbe (hole) mein process ko rakhta hai.",
+        explanation_mr: "He sarvat mothya rikamya dibbyat (hole) process la thevte."
+    },
+    { 
+        id: 66, 
+        q: "Which allocation technique requires compaction?", 
+        q_hi: "Compaction ki zaroorat kahan padti hai?", 
+        options: { a: "Paging", b: "Segmentation", c: "Fixed partition", d: "Demand paging" }, 
+        answer: "b", 
+        explanation: "To fix external fragmentation in Segmentation, we must shuffle memory (compaction).", 
+        explanation_hi: "Segmentation mein bikhri hui jagah ko ek saath karne ke liye.",
+        explanation_mr: "Segmentation madhe pasarleli jaga ekatra karnyasathi."
+    },
+    { 
+        id: 67, 
+        q: "Which memory technique allows non-contiguous allocation?", 
+        q_hi: "Kaunsi technique mein data lagataar (contiguous) hona zaroori nahi?", 
+        options: { a: "Fixed partition", b: "Contiguous allocation", c: "Paging", d: "Compaction" }, 
+        answer: "c", 
+        explanation: "Paging scatters data across memory wherever space is available.", 
+        explanation_hi: "Paging mein data kahin bhi tukdo mein rakha ja sakta hai.",
+        explanation_mr: "Paging madhe data kuthahi tukdyanmadhe thevla jau shakto."
+    },
+    { 
+        id: 68, 
+        q: "Page replacement algorithm with minimum page faults is:", 
+        q_hi: "Sabse kam galtiyan (page faults) kaunsa algorithm karta hai?", 
+        options: { a: "FIFO", b: "LRU", c: "Optimal", d: "LFU" }, 
+        answer: "c", 
+        explanation: "The Optimal algorithm (replacing page needed furthest in future) is theoretically best.", 
+        explanation_hi: "Optimal algorithm sabse best hai, par ise banana namumkin hai.",
+        explanation_mr: "Optimal algorithm sarvat best ahe, pan yala banavne ashakya ahe."
+    },
+    { 
+        id: 69, 
+        q: "Which algorithm may show Belady’s anomaly?", 
+        q_hi: "Belady’s anomaly kis algorithm mein dikhti hai?", 
+        options: { a: "LRU", b: "FIFO", c: "Optimal", d: "LFU" }, 
+        answer: "b", 
+        explanation: "FIFO is the only standard stack algorithm that suffers from Belady's anomaly.", 
+        explanation_hi: "Sirf FIFO mein memory badhane par bhi performance kharab ho sakti hai.",
+        explanation_mr: "Fakta FIFO madhe memory vadhavlyavar pan performance kharab hou shakte."
+    },
+    { 
+        id: 70, 
+        q: "Page fault service time depends mainly on:", 
+        q_hi: "Page fault theek karne mein time kiska lagta hai?", 
+        options: { a: "CPU speed", b: "Disk access time", c: "RAM size", d: "TLB hit ratio" }, 
+        answer: "b", 
+        explanation: "Reading the page from the slow hard disk takes the most time.", 
+        explanation_hi: "Hard disk se data laane mein hi sabse zyada time lagta hai.",
+        explanation_mr: "Hard disk madhun data aanyatach sarvat jast vel lagto."
+    },
+    { 
+        id: 71, 
+        q: "TLB miss requires accessing:", 
+        q_hi: "Agar TLB mein address na mile, to kahan dekhna padta hai?", 
+        options: { a: "Cache", b: "Disk", c: "Page table", d: "CPU registers" }, 
+        answer: "c", 
+        explanation: "If TLB misses, the CPU must look up the Page Table in main memory.", 
+        explanation_hi: "Agar TLB fail ho jaye, to RAM mein Page Table check karni padti hai.",
+        explanation_mr: "Jar TLB fail zale, tar RAM madhe Page Table check karavi lagte."
+    },
+    { 
+        id: 72, 
+        q: "Dirty bit is set when:", 
+        q_hi: "Dirty bit kab on (set) hoti hai?", 
+        options: { a: "Page loaded", b: "Page referenced", c: "Page modified", d: "Page replaced" }, 
+        answer: "c", 
+        explanation: "It is set when a page is written to (modified) so the OS knows to save it later.", 
+        explanation_hi: "Jab page mein kuch likha ya badla jata hai (Modified).",
+        explanation_mr: "Jevha page madhe kahiteri lihile kiva badalle jate (Modified)."
+    },
+    { 
+        id: 73, 
+        q: "Deadlock prevention works by:", 
+        q_hi: "Deadlock ko hone se kaise roka jata hai?", 
+        options: { a: "Detecting deadlock", b: "Avoiding deadlock", c: "Violating one condition", d: "Killing processes" }, 
+        answer: "c", 
+        explanation: "Prevention works by ensuring at least one of the 4 deadlock conditions cannot happen.", 
+        explanation_hi: "Deadlock ki 4 sharto mein se kisi ek ko tod kar.",
+        explanation_mr: "Deadlock chya 4 shartinpaiki kontyahi ekela modun."
+    },
+    { 
+        id: 74, 
+        q: "Banker’s algorithm is used for:", 
+        q_hi: "Banker’s algorithm kahan use hota hai?", 
+        options: { a: "Deadlock prevention", b: "Deadlock avoidance", c: "Deadlock detection", d: "Starvation" }, 
+        answer: "b", 
+        explanation: "It avoids deadlock by only granting resources if the system stays in a Safe State.", 
+        explanation_hi: "Ye deadlock 'Avoid' karta hai safe state check karke.",
+        explanation_mr: "He deadlock 'Avoid' karte safe state check karun."
+    },
+    { 
+        id: 75, 
+        q: "Circular wait condition can be prevented by:", 
+        q_hi: "Circular wait ko kaise roka ja sakta hai?", 
+        options: { a: "Preemption", b: "Resource ordering", c: "Spooling", d: "Paging" }, 
+        answer: "b", 
+        explanation: "Assigning numbers to resources and requesting them in order prevents cycles.", 
+        explanation_hi: "Resources ko number dekar ek order mein mangne se circle nahi banega.",
+        explanation_mr: "Resources la number deun ek order madhe magitlyas circle banar nahi."
+    }
+];
+
+// ARRAY 4: Sync, Linux & I/O (Q76-Q100)
+const os_part4 = [
+    { 
+        id: 76, 
+        q: "Difference between deadlock and starvation is:", 
+        q_hi: "Deadlock aur Starvation mein kya farak hai?", 
+        options: { a: "Same thing", b: "Deadlock permanent, starvation indefinite delay", c: "Starvation permanent", d: "Both temporary" }, 
+        answer: "b", 
+        explanation: "Deadlock is a full stop (0 progress), Starvation is just a very long wait.", 
+        explanation_hi: "Deadlock mein sab ruk jata hai, Starvation mein bas der hoti hai.",
+        explanation_mr: "Deadlock madhe sagla thambta, Starvation madhe fakta ushir hoto."
+    },
+    { 
+        id: 77, 
+        q: "Which IPC mechanism supports synchronization?", 
+        q_hi: "Kaunsa IPC synchronization mein madad karta hai?", 
+        options: { a: "Pipe", b: "Message queue", c: "Semaphore", d: "Socket" }, 
+        answer: "c", 
+        explanation: "Semaphores are specifically designed for synchronization (signaling).", 
+        explanation_hi: "Semaphore specially signals aur synchronization ke liye bana hai.",
+        explanation_mr: "Semaphore specially signals ani synchronization sathi banavle ahe."
+    },
+    { 
+        id: 78, 
+        q: "Which command changes file permissions?", 
+        q_hi: "File permission badalne ki command?", 
+        options: { a: "chown", b: "chmod", c: "u mask", d: "ps" }, 
+        answer: "b", 
+        explanation: "'chmod' (Change Mode) modifies read, write, and execute permissions.", 
+        explanation_hi: "'chmod' se hum file ki permission (read/write) badalte hain.",
+        explanation_mr: "'chmod' ne apan file chi permission (read/write) badalto."
+    },
+    { 
+        id: 79, 
+        q: "umask value affects:", 
+        q_hi: "umask value kis par asar dalti hai?", 
+        options: { a: "Existing files", b: "New file permissions", c: "Ownership", d: "Process priority" }, 
+        answer: "b", 
+        explanation: "umask determines the default permissions for newly created files.", 
+        explanation_hi: "Jo nayi file banegi, uski default permission kya hogi ye umask tay karta hai.",
+        explanation_mr: "Je navin file banel, tyachi default permission kay asel he umask tharavte."
+    },
+    { 
+        id: 80, 
+        q: "Which command sends signal to process?", 
+        q_hi: "Process ko signal bhejne ki command?", 
+        options: { a: "nice", b: "kill", c: "top", d: "ps" }, 
+        answer: "b", 
+        explanation: "'kill' sends specific signals (like SIGKILL, SIGTERM) to a PID.", 
+        explanation_hi: "'kill' command use karke hum process ko signal bhejte hain.",
+        explanation_mr: "'kill' command vaprun apan process la signal pathavto."
+    },
+    { 
+        id: 81, 
+        q: "Which permission allows directory access?", 
+        q_hi: "Directory ke andar jaane ke liye kaunsi permission chahiye?", 
+        options: { a: "Read", b: "Write", c: "Execute", d: "Sticky" }, 
+        answer: "c", 
+        explanation: "The Execute (x) permission on a directory allows you to 'enter' (cd) it.", 
+        explanation_hi: "Execute (x) permission honi chahiye tabhi aap folder khol (cd) sakte hain.",
+        explanation_mr: "Execute (x) permission asavi lagte tevha tumhi folder ughadu (cd) shakta."
+    },
+    { 
+        id: 82, 
+        q: "Sticky bit is mainly used for:", 
+        q_hi: "Sticky bit ka main use kya hai?", 
+        options: { a: "Execution", b: "File locking", c: "Directory protection", d: "Scheduling" }, 
+        answer: "c", 
+        explanation: "It ensures only the file owner can delete files in a shared directory (like /tmp).", 
+        explanation_hi: "Ye shared folder mein protection deta hai taaki koi aur aapki file delete na kare.",
+        explanation_mr: "He shared folder madhe protection dete jyamyule koni dusra tumchi file delete karnar nahi."
+    },
+    { 
+        id: 83, 
+        q: "Which loop executes at least once?", 
+        q_hi: "Kaunsa loop kam se kam ek baar zaroor chalta hai?", 
+        options: { a: "for", b: "while", c: "until", d: "do-while" }, 
+        answer: "d", 
+        explanation: "do-while checks the condition at the end, so it runs once unconditionally.", 
+        explanation_hi: "do-while condition baad mein check karta hai, isliye pehli baar chal jata hai.",
+        explanation_mr: "do-while condition nantr check karte, mhanun pahilyanda chalte."
+    },
+    { 
+        id: 84, 
+        q: "$? in shell gives:", 
+        q_hi: "Shell mein $? kya deta hai?", 
+        options: { a: "Process ID", b: "Exit status", c: "Argument count", d: "Shell PID" }, 
+        answer: "b", 
+        explanation: "It returns the exit status of the last executed command (0 for success).", 
+        explanation_hi: "Ye batata hai ki pichli command safal hui ya fail (Exit Status).",
+        explanation_mr: "He sangte ki magchi command successful zali ki fail (Exit Status)."
+    },
+    { 
+        id: 85, 
+        q: "Which symbol represents command-line arguments?", 
+        q_hi: "Command-line arguments kisse dikhaye jate hain?", 
+        options: { a: "$0", b: "$1, $2 …", c: "$?", d: "$$" }, 
+        answer: "b", 
+        explanation: "$1 is the first argument, $2 is the second, and so on.", 
+        explanation_hi: "$1 pehla argument hota hai, $2 doosra, etc.",
+        explanation_mr: "$1 pahila argument asto, $2 dusra, etc."
+    },
+    { 
+        id: 86, 
+        q: "I/O buffering improves:", 
+        q_hi: "I/O buffering se kya fayda hota hai?", 
+        options: { a: "CPU scheduling", b: "Disk speed", c: "Overlap of I/O and CPU", d: "Memory protection" }, 
+        answer: "c", 
+        explanation: "It allows the CPU to work while the I/O device is slowly filling the buffer.", 
+        explanation_hi: "Ye CPU aur I/O ko ek saath kaam karne (overlap) mein madad karta hai.",
+        explanation_mr: "He CPU ani I/O la ekatra kaam karayla (overlap) madat karte."
+    },
+    { 
+        id: 87, 
+        q: "Throttling is used to control:", 
+        q_hi: "Throttling kiske liye use hoti hai?", 
+        options: { a: "CPU load", b: "Memory allocation", c: "I/O device speed", d: "Process creation" }, 
+        answer: "c", 
+        explanation: "It matches the speed of producers/consumers or controls flow.", 
+        explanation_hi: "Ye I/O speed ya data flow ko control karne ke liye use hoti hai.",
+        explanation_mr: "He I/O speed kiva data flow la control karnyasathi vaparle jate."
+    },
+    { 
+        id: 88, 
+        q: "Which scheduling is used in real-time systems?", 
+        q_hi: "Real-time systems mein kaunsi scheduling use hoti hai?", 
+        options: { a: "FCFS", b: "EDF", c: "RR", d: "SJF" }, 
+        answer: "b", 
+        explanation: "EDF (Earliest Deadline First) is a standard dynamic priority algo for RTOS.", 
+        explanation_hi: "EDF (Earliest Deadline First) RTOS ke liye best hai.",
+        explanation_mr: "EDF (Earliest Deadline First) RTOS sathi best ahe."
+    },
+    { 
+        id: 89, 
+        q: "Hard real-time system failure means:", 
+        q_hi: "Hard real-time system fail hone ka kya matlab hai?", 
+        options: { a: "Delay acceptable", b: "System crash", c: "Deadline miss unacceptable", d: "Retry allowed" }, 
+        answer: "c", 
+        explanation: "In Hard RTOS, missing a deadline is a total system failure.", 
+        explanation_hi: "Iska matlab deadline miss karna bilkul allowed nahi hai (Total Failure).",
+        explanation_mr: "Yacha arth deadline miss karne ajibat allowed nahi ahe (Total Failure)."
+    },
+    { 
+        id: 90, 
+        q: "Which OS feature ensures isolation between processes?", 
+        q_hi: "Kaunsa feature process ko ek doosre se alag rakhta hai?", 
+        options: { a: "Scheduling", b: "Virtual memory", c: "Paging", d: "File system" }, 
+        answer: "b", 
+        explanation: "Virtual memory gives each process its own private address space.", 
+        explanation_hi: "Virtual memory har process ko apna alag private area deti hai.",
+        explanation_mr: "Virtual memory pratyek process la swatahacha vegla private area dete."
+    },
+    { 
+        id: 91, 
+        q: "Which structure has minimum context switch overhead?", 
+        q_hi: "Sabse kam context switch overhead kisme hai?", 
+        options: { a: "Microkernel", b: "Monolithic kernel", c: "Layered OS", d: "Virtual machine" }, 
+        answer: "b", 
+        explanation: "Monolithic kernels run all services in kernel space, reducing mode switches.", 
+        explanation_hi: "Monolithic mein sab kuch ek jagah hota hai, isliye switching kam hoti hai.",
+        explanation_mr: "Monolithic madhe sagla ekatra asta, mhanun switching kami hote."
+    },
+    { 
+        id: 92, 
+        q: "Which memory is fastest?", 
+        q_hi: "Sabse tez memory kaunsi hai?", 
+        options: { a: "Cache", b: "Main memory", c: "Disk", d: "Secondary storage" }, 
+        answer: "a", 
+        explanation: "Cache is closest to the CPU and is the fastest memory type.", 
+        explanation_hi: "Cache CPU ke sabse paas hoti hai, isliye sabse tez hai.",
+        explanation_mr: "Cache CPU chya sarvat javal aste, mhanun sarvat fast ahe."
+    },
+    { 
+        id: 93, 
+        q: "Swapping is controlled by:", 
+        q_hi: "Swapping kaun control karta hai?", 
+        options: { a: "Short-term scheduler", b: "Medium-term scheduler", c: "Long-term scheduler", d: "Dispatcher" }, 
+        answer: "b", 
+        explanation: "The Medium-term scheduler swaps processes in and out of memory.", 
+        explanation_hi: "Medium-term scheduler processes ko memory se bahar/andar karta hai.",
+        explanation_mr: "Medium-term scheduler processes la memory chya baher/aat karte."
+    },
+    { 
+        id: 94, 
+        q: "Which resource is NOT sharable?", 
+        q_hi: "Kaunsa resource share nahi kiya ja sakta?", 
+        options: { a: "Read-only file", b: "Printer", c: "Memory", d: "CPU" }, 
+        answer: "b", 
+        explanation: "A printer is an exclusive device; you can't print two docs simultaneously (without spooling).", 
+        explanation_hi: "Printer ek waqt mein ek hi aadmi use kar sakta hai (Exclusive).",
+        explanation_mr: "Printer ekavelis ekach manus vapru shakto (Exclusive)."
+    },
+    { 
+        id: 95, 
+        q: "Which scheduling policy uses multiple queues?", 
+        q_hi: "Kaunsi scheduling mein ek se zyada queue hoti hain?", 
+        options: { a: "RR", b: "FCFS", c: "Multilevel queue", d: "SJF" }, 
+        answer: "c", 
+        explanation: "Multilevel Queue scheduling maintains separate queues for different process types.", 
+        explanation_hi: "Ismein alag-alag kaam ke liye alag-alag lines (queues) hoti hain.",
+        explanation_mr: "Yat vegveglya kaamansathi vegveglya lines (queues) astat."
+    },
+    { 
+        id: 96, 
+        q: "Which technique reduces starvation in priority scheduling?", 
+        q_hi: "Priority scheduling mein starvation kaise kam karein?", 
+        options: { a: "Paging", b: "Aging", c: "Preemption", d: "Compaction" }, 
+        answer: "b", 
+        explanation: "Aging gradually increases priority over time to ensure execution.", 
+        explanation_hi: "Aging use karke hum purani processes ki priority badhate hain.",
+        explanation_mr: "Aging vaprun apan junya processes chi priority vadhavto."
+    },
+    { 
+        id: 97, 
+        q: "Which page replacement considers frequency of access?", 
+        q_hi: "Kaunsa algorithm dekhta hai ki page kitni baar use hua?", 
+        options: { a: "FIFO", b: "LFU", c: "LRU", d: "Optimal" }, 
+        answer: "b", 
+        explanation: "LFU (Least Frequently Used) removes pages with the lowest usage count.", 
+        explanation_hi: "LFU (Least Frequently Used) count karta hai ki page kitni baar use hua.",
+        explanation_mr: "LFU (Least Frequently Used) count karte ki page kiti vela vaparla gela."
+    },
+    { 
+        id: 98, 
+        q: "Which signal cannot be caught or ignored?", 
+        q_hi: "Kaunsa signal roka ya ignore nahi kiya ja sakta?", 
+        options: { a: "SIGINT", b: "SIGTERM", c: "SIGKILL", d: "SIGSTOP" }, 
+        answer: "c", 
+        explanation: "SIGKILL immediately terminates a process and cannot be blocked.", 
+        explanation_hi: "SIGKILL process ko turant maar deta hai, ise roka nahi ja sakta.",
+        explanation_mr: "SIGKILL process la tabadtob marun takte, yala rokhta yet nahi."
+    },
+    { 
+        id: 99, 
+        q: "Which Linux command displays environment variables?", 
+        q_hi: "Linux mein variables dekhne ki command?", 
+        options: { a: "env", b: "set", c: "export", d: "printenv" }, 
+        answer: "d", 
+        explanation: "'printenv' prints all or part of the environment.", 
+        explanation_hi: "'printenv' saare environment variables ko screen par dikhata hai.",
+        explanation_mr: "'printenv' saglya environment variables la screen var dakhavte."
+    },
+    { 
+        id: 100, 
+        q: "Which OS concept prevents unauthorized memory access?", 
+        q_hi: "Memory ko galat access se kaun bachata hai?", 
+        options: { a: "Scheduling", b: "Protection", c: "Swapping", d: "Spooling" }, 
+        answer: "b", 
+        explanation: "Memory protection mechanisms (like base/limit registers) prevent unauthorized access.", 
+        explanation_hi: "Protection mechanism check karta hai ki koi process doosre ki memory na chhue.",
+        explanation_mr: "Protection mechanism check karte ki koni process dusryachi memory na vaparel."
+    }
+];
+
+// ARRAY 5: Complex Scenarios (Q101-Q125)
+const os_part5 = [
+    { 
+        id: 101, 
+        q: "fork(); fork(); fork(); How many processes created?", 
+        q_hi: "fork(); fork(); fork(); Kitni processes banengi?", 
+        options: { a: "4", b: "6", c: "8", d: "7" }, 
+        answer: "c", 
+        explanation: "2^n where n=3. 2^3 = 8 total processes (including parent).", 
+        explanation_hi: "3 fork calls ka matlab 2^3 = 8 processes.",
+        explanation_mr: "3 fork calls cha arth 2^3 = 8 processes."
+    },
+    { 
+        id: 102, 
+        q: "if(fork()==0) exec('ls'); printf('Done'); Which is TRUE?", 
+        q_hi: "Is code ka result kya hoga?", 
+        options: { a: "'Done' printed once", b: "'Done' printed twice", c: "'Done' printed by child", d: "exec creates new process" }, 
+        answer: "a", 
+        explanation: "Child runs 'ls' and exits (exec replaces code). Only Parent prints 'Done'.", 
+        explanation_hi: "Child 'ls' chala kar khatam ho jayega. Sirf Parent 'Done' print karega.",
+        explanation_mr: "Child 'ls' chalvun sampun jail. Fakta Parent 'Done' print karel."
+    },
+    { 
+        id: 103, 
+        q: "Which system call waits for a specific child process?", 
+        q_hi: "Kisi specific child ka wait karne ke liye kaunsi call hai?", 
+        options: { a: "wait()", b: "waitpid()", c: "sleep()", d: "exit()" }, 
+        answer: "b", 
+        explanation: "waitpid() allows waiting for a specific child PID.", 
+        explanation_hi: "waitpid() se hum kisi khaas child process ka wait kar sakte hain.",
+        explanation_mr: "waitpid() ne apan konatyahi vishishtha child process chi vaat pahu shakto."
+    },
+    { 
+        id: 104, 
+        q: "exec() failure means:", 
+        q_hi: "Agar exec() fail ho jaye to kya hota hai?", 
+        options: { a: "child exits", b: "old image continues", c: "kernel panic", d: "zombie created" }, 
+        answer: "b", 
+        explanation: "If exec() fails, the original program continues execution from the next line.", 
+        explanation_hi: "Agar exec fail ho gaya, to purana program wahi se aage badhega.",
+        explanation_mr: "Jar exec fail zala, tar juna program tithunach pudhe jail."
+    },
+    { 
+        id: 105, 
+        q: "Which call never returns on success?", 
+        q_hi: "Kaunsa function success hone par wapas nahi aata?", 
+        options: { a: "fork()", b: "wait()", c: "exec()", d: "kill()" }, 
+        answer: "c", 
+        explanation: "exec() replaces the entire process memory; there is no old code to return to.", 
+        explanation_hi: "exec() purane code ko mita deta hai, isliye wapas aane ka raasta nahi bachta.",
+        explanation_mr: "exec() junya code la pusun takte, mhanun parat yenyacha marga urat nahi."
+    },
+    { 
+        id: 106, 
+        q: "In RR, decreasing time quantum too much leads to:", 
+        q_hi: "RR mein time limit bahut kam karne se kya hoga?", 
+        options: { a: "starvation", b: "low response time", c: "excessive context switching", d: "deadlock" }, 
+        answer: "c", 
+        explanation: "Too many switches waste CPU time (High Overhead).", 
+        explanation_hi: "CPU baar-baar switch karne mein hi time barbaad karega.",
+        explanation_mr: "CPU varanvar switch karnyatach vel vaya ghalvel."
+    },
+    { 
+        id: 107, 
+        q: "Which scheduling considers arrival + burst time ratio?", 
+        q_hi: "Arrival aur Burst time ratio kaun dekhta hai?", 
+        options: { a: "FCFS", b: "SJF", c: "HRRN", d: "RR" }, 
+        answer: "c", 
+        explanation: "Highest Response Ratio Next (HRRN) calculates Priority based on Wait + Burst time.", 
+        explanation_hi: "HRRN formula use karta hai: (Wait + Burst) / Burst.",
+        explanation_mr: "HRRN formula vaparte: (Wait + Burst) / Burst."
+    },
+    { 
+        id: 108, 
+        q: "Multilevel feedback queue improves:", 
+        q_hi: "Multilevel feedback queue kis cheez ko sudharta hai?", 
+        options: { a: "throughput", b: "response time", c: "CPU utilization", d: "fairness" }, 
+        answer: "b", 
+        explanation: "It allows interactive processes to move to higher priority queues for fast response.", 
+        explanation_hi: "Ye interactive jobs ko jaldi response dene mein madad karta hai.",
+        explanation_mr: "He interactive jobs la lavkar response denyat madat karte."
+    },
+    { 
+        id: 109, 
+        q: "Which memory allocation causes internal fragmentation?", 
+        q_hi: "Kis allocation mein internal fragmentation hoti hai?", 
+        options: { a: "Paging", b: "Segmentation", c: "Variable partition", d: "Dynamic allocation" }, 
+        answer: "a", 
+        explanation: "Paging uses fixed-size blocks, leading to wasted space in the last block.", 
+        explanation_hi: "Paging mein blocks ka size fix hota hai, isliye jagah waste hoti hai.",
+        explanation_mr: "Paging madhe blocks chi size fix aste, mhanun jaga waste hote."
+    },
+    { 
+        id: 110, 
+        q: "Page table is stored in:", 
+        q_hi: "Page table kahan store hoti hai?", 
+        options: { a: "Cache", b: "Disk", c: "Main memory", d: "TLB only" }, 
+        answer: "c", 
+        explanation: "Page tables are too large for registers, so they reside in Main Memory (RAM).", 
+        explanation_hi: "Page table badi hoti hai, isliye RAM mein rakhi jati hai.",
+        explanation_mr: "Page table mothi aste, mhanun RAM madhe thevli jate."
+    },
+    { 
+        id: 111, 
+        q: "Large page size causes:", 
+        q_hi: "Agar Page size bada ho to kya hoga?", 
+        options: { a: "more page faults", b: "less internal fragmentation", c: "more internal fragmentation", d: "thrashing" }, 
+        answer: "c", 
+        explanation: "Larger pages mean the leftover space in the last page is larger.", 
+        explanation_hi: "Bada page matlab aakhri page mein zyada jagah khali bachegi.",
+        explanation_mr: "Motha page mhanje shevtachya page madhe jast jaga rikami rahel."
+    },
+    { 
+        id: 112, 
+        q: "Which technique allows shared memory easily?", 
+        q_hi: "Shared memory kis technique mein aasaan hai?", 
+        options: { a: "Paging", b: "Segmentation", c: "Fixed partition", d: "Swapping" }, 
+        answer: "a", 
+        explanation: "Paging allows different processes to point to the same physical frame.", 
+        explanation_hi: "Paging mein do process same page ko point kar sakti hain.",
+        explanation_mr: "Paging madhe don process same page la point karu shaktat."
+    },
+    { 
+        id: 113, 
+        q: "Which replacement algorithm is stack-based?", 
+        q_hi: "Kaunsa algorithm stack property follow karta hai?", 
+        options: { a: "FIFO", b: "LFU", c: "LRU", d: "Optimal" }, 
+        answer: "c", 
+        explanation: "LRU is a stack algorithm and does not suffer from Belady's Anomaly.", 
+        explanation_hi: "LRU stack-based hai aur ismein Belady's anomaly nahi hoti.",
+        explanation_mr: "LRU stack-based ahe ani yachyat Belady's anomaly hot nahi."
+    },
+    { 
+        id: 114, 
+        q: "Working set model helps control:", 
+        q_hi: "Working set model kis cheez ko control karta hai?", 
+        options: { a: "deadlock", b: "thrashing", c: "starvation", d: "fragmentation" }, 
+        answer: "b", 
+        explanation: "It ensures a process has enough frames for its locality, preventing thrashing.", 
+        explanation_hi: "Ye Thrashing rokne mein madad karta hai.",
+        explanation_mr: "He Thrashing rokhnyat madat karte."
+    },
+    { 
+        id: 115, 
+        q: "Page fault frequency too high indicates:", 
+        q_hi: "Agar Page Faults bahut zyada ho rahe hain to kya matlab hai?", 
+        options: { a: "excess memory", b: "underutilization", c: "thrashing", d: "deadlock" }, 
+        answer: "c", 
+        explanation: "High fault rate means the system is thrashing (busy swapping).", 
+        explanation_hi: "Iska matlab system Thrashing kar raha hai (bas swap kar raha hai, kaam nahi).",
+        explanation_mr: "Yacha arth system Thrashing karat ahe (fakta swap karat ahe, kaam nahi)."
+    },
+    { 
+        id: 116, 
+        q: "Which approach allows deadlock but detects later?", 
+        q_hi: "Kaunsa tareeka deadlock hone deta hai par baad mein pakadta hai?", 
+        options: { a: "Prevention", b: "Avoidance", c: "Detection", d: "Ignorance" }, 
+        answer: "c", 
+        explanation: "Deadlock Detection lets it happen, then finds and fixes it.", 
+        explanation_hi: "Detection mein hum deadlock hone dete hain, fir use dhoondhte hain.",
+        explanation_mr: "Detection madhe apan deadlock hou deto, mag tyala shodhto."
+    },
+    { 
+        id: 117, 
+        q: "Binary semaphore value range:", 
+        q_hi: "Binary semaphore ki value kya ho sakti hai?", 
+        options: { a: "0–1", b: "−1–1", c: "0–∞", d: "−∞–∞" }, 
+        answer: "a", 
+        explanation: "Binary semaphore can only be 0 (locked) or 1 (unlocked).", 
+        explanation_hi: "Ye sirf 0 ya 1 ho sakta hai (Jaise switch on/off).",
+        explanation_mr: "He fakta 0 kiva 1 asu shakte (Jase switch on/off)."
+    },
+    { 
+        id: 118, 
+        q: "Which is NOT a synchronization problem?", 
+        q_hi: "Inmein se kaunsi Synchronization problem nahi hai?", 
+        options: { a: "Producer–Consumer", b: "Readers–Writers", c: "Dining Philosophers", d: "Paging" }, 
+        answer: "d", 
+        explanation: "Paging is a memory management concept, not a sync problem.", 
+        explanation_hi: "Paging memory se juda hai, synchronization se nahi.",
+        explanation_mr: "Paging memory shi sambandhit ahe, synchronization shi nahi."
+    },
+    { 
+        id: 119, 
+        q: "Which signal is generated by Ctrl+C?", 
+        q_hi: "Ctrl+C dabane se kaunsa signal jata hai?", 
+        options: { a: "SIGSTOP", b: "SIGTERM", c: "SIGINT", d: "SIGKILL" }, 
+        answer: "c", 
+        explanation: "Ctrl+C sends SIGINT (Interrupt) to stop the process.", 
+        explanation_hi: "Ctrl+C se SIGINT (Interrupt) signal jata hai.",
+        explanation_mr: "Ctrl+C ne SIGINT (Interrupt) signal jate."
+    },
+    { 
+        id: 120, 
+        q: "Which IPC allows bidirectional communication?", 
+        q_hi: "Kaunsa IPC dono taraf baat karne deta hai?", 
+        options: { a: "Pipe", b: "FIFO", c: "Message queue", d: "Shared memory" }, 
+        answer: "d", 
+        explanation: "Shared Memory allows both reading and writing by multiple processes freely.", 
+        explanation_hi: "Shared Memory mein koi bhi kabhi bhi likh ya padh sakta hai (flexible).",
+        explanation_mr: "Shared Memory madhe konihi kadhihi lihu kiva vachu shakte (flexible)."
+    },
+    { 
+        id: 121, 
+        q: "Which command shows process hierarchy?", 
+        q_hi: "Process ka parivaar (tree) dekhne ki command?", 
+        options: { a: "ps", b: "pstree", c: "top", d: "tree" }, 
+        answer: "b", 
+        explanation: "'pstree' shows running processes as a tree diagram.", 
+        explanation_hi: "'pstree' processes ko ek tree ki tarah dikhata hai.",
+        explanation_mr: "'pstree' processes la ek tree sarkhe dakhavte."
+    },
+    { 
+        id: 122, 
+        q: "Which scheduling is optimal for real-time tasks?", 
+        q_hi: "Real-time tasks ke liye sabse sahi scheduling kaunsi hai?", 
+        options: { a: "FCFS", b: "EDF", c: "RR", d: "Priority" }, 
+        answer: "d", 
+        explanation: "Priority scheduling is the basis for most RTOS (EDF is also a type of priority).", 
+        explanation_hi: "RTOS mein Priority sabse zaroori hoti hai.",
+        explanation_mr: "RTOS madhe Priority sarvat mahatvachi aste."
+    },
+    { 
+        id: 123, 
+        q: "Soft real-time system means:", 
+        q_hi: "Soft real-time system ka kya matlab hai?", 
+        options: { a: "deadline must be met", b: "occasional miss allowed", c: "failure fatal", d: "retry forbidden" }, 
+        answer: "b", 
+        explanation: "In Soft RTOS, missing a deadline degrades quality but doesn't crash the system.", 
+        explanation_hi: "Ismein kabhi-kabhi late hona chalta hai (jaise video streaming).",
+        explanation_mr: "Yat kadhi-kadhi ushir zala tari chalte (jase video streaming)."
+    },
+    { 
+        id: 124, 
+        q: "Which OS supports deterministic timing?", 
+        q_hi: "Kaunsa OS pakka time batata hai?", 
+        options: { a: "UNIX", b: "Windows", c: "RTOS", d: "Linux" }, 
+        answer: "c", 
+        explanation: "RTOS is deterministic; actions happen at predictable times.", 
+        explanation_hi: "RTOS mein humein pehle se pata hota hai ki kaam kab hoga.",
+        explanation_mr: "RTOS madhe aplyala pahilyanda mahit aste ki kaam kadhi hoil."
+    },
+    { 
+        id: 125, 
+        q: "Which factor most affects OS performance?", 
+        q_hi: "OS ki performance par sabse zyada asar kiska padta hai?", 
+        options: { a: "GUI", b: "Scheduling policy", c: "File naming", d: "User count" }, 
+        answer: "b", 
+        explanation: "The scheduling policy determines how efficiently the CPU is used.", 
+        explanation_hi: "Scheduling sahi hogi to hi CPU acche se kaam karega.",
+        explanation_mr: "Scheduling barobar asel tarach CPU changle kaam karel."
+    }
+];
+        // --- DATA SECTION: SDM QUESTIONS (NEW) ---
+
+        // --- SDM ARRAYS (Q126 - Q250) ---
+
+// ARRAY 6: Lifecycle & Design (Q126-Q150)
+const sdm_lifecycle = [
+    { 
+        id: 126, 
+        q: "Software engineering is concerned with:", 
+        q_hi: "Software engineering kis cheez se judi hai?", 
+        options: { a: "Coding only", b: "Systematic software development", c: "Hardware design", d: "Testing only" }, 
+        answer: "b", 
+        explanation: "It is a disciplined approach to developing software, not just writing code.", 
+        explanation_hi: "Ye software banane ka ek systematic tareeka hai, sirf coding nahi.",
+        explanation_mr: "He software banvanyachi ek systematic paddhat ahe, fakta coding nahi."
+    },
+    { 
+        id: 127, 
+        q: "Software product is different from a program because it includes:", 
+        q_hi: "Software product program se alag kyun hai?", 
+        options: { a: "Source code only", b: "Executable only", c: "Documentation and maintenance", d: "Algorithms" }, 
+        answer: "c", 
+        explanation: "A product includes the code plus documentation, manuals, and support.", 
+        explanation_hi: "Product mein code ke saath documentation aur maintenance bhi shamil hota hai.",
+        explanation_mr: "Product madhe code sobat documentation ani maintenance pan aste."
+    },
+    { 
+        id: 128, 
+        q: "Software process mainly consists of:", 
+        q_hi: "Software process mein mukhya roop se kya hota hai?", 
+        options: { a: "Tools", b: "People", c: "Activities", d: "Programming languages" }, 
+        answer: "c", 
+        explanation: "It is a set of activities (Spec, Design, Validation, Evolution) to build software.", 
+        explanation_hi: "Ismein software banane ki alag-alag activities (kaam) shamil hoti hain.",
+        explanation_mr: "Yat software banvanyachya vegveglya activities (kaam) samavishta astat."
+    },
+    { 
+        id: 129, 
+        q: "Which is NOT a software process activity?", 
+        q_hi: "Inmein se kaunsi software process ki activity nahi hai?", 
+        options: { a: "Specification", b: "Development", c: "Validation", d: "Compilation" }, 
+        answer: "d", 
+        explanation: "Compilation is an automated step by a compiler, not a high-level process activity.", 
+        explanation_hi: "Compilation computer khud karta hai, ye planning wala hissa nahi hai.",
+        explanation_mr: "Compilation computer swataha karte, he planning cha bhaag nahi."
+    },
+    { 
+        id: 130, 
+        q: "Main objective of software engineering is:", 
+        q_hi: "Software engineering ka mukhya uddeshya kya hai?", 
+        options: { a: "Fast coding", b: "Low cost only", c: "High quality and maintainability", d: "Less documentation" }, 
+        answer: "c", 
+        explanation: "To produce reliable, efficient, and maintainable software.", 
+        explanation_hi: "Ek accha aur maintain karne layak software banana.",
+        explanation_mr: "Ek changle ani maintain karanyajoge software banvne."
+    },
+    { 
+        id: 131, 
+        q: "Which SDLC model is rigid and sequential?", 
+        q_hi: "Kaunsa SDLC model sakht aur line-by-line chalta hai?", 
+        options: { a: "Spiral", b: "Agile", c: "Waterfall", d: "Incremental" }, 
+        answer: "c", 
+        explanation: "Waterfall requires completing one phase entirely before moving to the next.", 
+        explanation_hi: "Waterfall mein ek step pura hone ke baad hi agla shuru hota hai.",
+        explanation_mr: "Waterfall madhe ek step purna zalyavarach pudhchi suru hote."
+    },
+    { 
+        id: 132, 
+        q: "Major drawback of Waterfall model is:", 
+        q_hi: "Waterfall model ki sabse badi kami kya hai?", 
+        options: { a: "Too much testing", b: "Late feedback", c: "No documentation", d: "No planning" }, 
+        answer: "b", 
+        explanation: "Testing happens at the end, so bugs/issues are found very late.", 
+        explanation_hi: "Ismein feedback bahut der se milta hai kyunki testing aakhri mein hoti hai.",
+        explanation_mr: "Yat feedback khup ushira milto karan testing shevti hote."
+    },
+    { 
+        id: 133, 
+        q: "V-Model emphasizes:", 
+        q_hi: "V-Model kis par zor deta hai?", 
+        options: { a: "Coding", b: "Parallel testing", c: "Rapid delivery", d: "Prototyping" }, 
+        answer: "b", 
+        explanation: "For every development phase, there is a corresponding testing phase.", 
+        explanation_hi: "Har development step ke saath testing judi hoti hai (Parallel Testing).",
+        explanation_mr: "Pratyek development step sobat testing jodleli aste (Parallel Testing)."
+    },
+    { 
+        id: 134, 
+        q: "Spiral model is best suited when:", 
+        q_hi: "Spiral model kab sabse accha hota hai?", 
+        options: { a: "Requirements are fixed", b: "Risk analysis is important", c: "Small projects only", d: "Testing is minimal" }, 
+        answer: "b", 
+        explanation: "It focuses heavily on identifying and mitigating risks early.", 
+        explanation_hi: "Jab project mein risk (khatra) zyada ho, tab ye model best hai.",
+        explanation_mr: "Jevha project madhe risk (dhoka) jast asto, tevha he model best ahe."
+    },
+    { 
+        id: 135, 
+        q: "Incremental model delivers software:", 
+        q_hi: "Incremental model software kaise deliver karta hai?", 
+        options: { a: "At the end", b: "All at once", c: "In small releases", d: "Without testing" }, 
+        answer: "c", 
+        explanation: "The product is built and delivered in small pieces (increments).", 
+        explanation_hi: "Ismein software thoda-thoda karke tukdon mein diya jata hai.",
+        explanation_mr: "Yat software thode-thode karun tukdyanmadhe dile jate."
+    },
+    { 
+        id: 136, 
+        q: "Requirement Engineering includes:", 
+        q_hi: "Requirement Engineering mein kya shamil hai?", 
+        options: { a: "Design only", b: "Coding only", c: "Elicitation, analysis, validation", d: "Testing only" }, 
+        answer: "c", 
+        explanation: "Gathering (elicitation), understanding (analysis), and checking (validation) requirements.", 
+        explanation_hi: "Zarooratein poochna, samajhna aur check karna.",
+        explanation_mr: "Garja vicharne, samjun ghene ani check karne."
+    },
+    { 
+        id: 137, 
+        q: "Functional requirements describe:", 
+        q_hi: "Functional requirements kya batati hain?", 
+        options: { a: "System constraints", b: "Performance", c: "What system should do", d: "Quality attributes" }, 
+        answer: "c", 
+        explanation: "They define the specific behaviors or functions of the system.", 
+        explanation_hi: "Ye batata hai ki system kya kaam karega (features).",
+        explanation_mr: "He sangte ki system kay kaam karel (features)."
+    },
+    { 
+        id: 138, 
+        q: "Non-functional requirements define:", 
+        q_hi: "Non-functional requirements kya define karti hain?", 
+        options: { a: "Features", b: "Algorithms", c: "Constraints and quality", d: "UI design only" }, 
+        answer: "c", 
+        explanation: "They define 'how' the system performs (speed, security, reliability).", 
+        explanation_hi: "System kaisa chalega (speed, security, quality).",
+        explanation_mr: "System kase chalel (speed, security, quality)."
+    },
+    { 
+        id: 139, 
+        q: "SRS stands for:", 
+        q_hi: "SRS ka full form kya hai?", 
+        options: { a: "System Requirement Sheet", b: "Software Requirement Specification", c: "Software Release Specification", d: "System Resource Specification" }, 
+        answer: "b", 
+        explanation: "It is the official document describing what needs to be built.", 
+        explanation_hi: "Ye wo document hai jisme likha hota hai ki software mein kya chahiye.",
+        explanation_mr: "He te document ahe jyat lihile aste ki software madhe kay have ahe."
+    },
+    { 
+        id: 140, 
+        q: "Which is NOT a characteristic of good SRS?", 
+        q_hi: "Ek acche SRS ki khasiyat kya nahi honi chahiye?", 
+        options: { a: "Ambiguous", b: "Complete", c: "Consistent", d: "Verifiable" }, 
+        answer: "a", 
+        explanation: "SRS should be clear. 'Ambiguous' means confusing or having double meanings.", 
+        explanation_hi: "SRS confusing (ambiguous) nahi hona chahiye, sab saaf hona chahiye.",
+        explanation_mr: "SRS confusing (ambiguous) nasave, sagla spashta asave."
+    },
+    { 
+        id: 141, 
+        q: "High cohesion means:", 
+        q_hi: "High cohesion ka matlab?", 
+        options: { a: "Strong dependency", b: "Related functionality in module", c: "High coupling", d: "Poor design" }, 
+        answer: "b", 
+        explanation: "Elements inside a module should work together towards a single purpose.", 
+        explanation_hi: "Ek module ke andar ka saara kaam ek doosre se juda hona chahiye.",
+        explanation_mr: "Ek module chya aatle sagla kaam ekmekanshi jodlele asave."
+    },
+    { 
+        id: 142, 
+        q: "Low coupling is desirable because it:", 
+        q_hi: "Low coupling acchi kyun hoti hai?", 
+        options: { a: "Increases dependency", b: "Makes changes easier", c: "Reduces performance", d: "Increases complexity" }, 
+        answer: "b", 
+        explanation: "Modules are independent, so changing one doesn't break others.", 
+        explanation_hi: "Isse ek cheez badalne par doosri cheezein kharab nahi hoti.",
+        explanation_mr: "Yamyule ek goshta badalyavar dusrya goshti kharab hot nahit."
+    },
+    { 
+        id: 143, 
+        q: "Which is NOT a design principle?", 
+        q_hi: "Inmein se kaunsa design principle nahi hai?", 
+        options: { a: "Modularity", b: "Layering", c: "Tight coupling", d: "Abstraction" }, 
+        answer: "c", 
+        explanation: "We want Loose Coupling, not Tight Coupling.", 
+        explanation_hi: "Humein Tight coupling nahi chahiye, wo bura design hota hai.",
+        explanation_mr: "Aplyala Tight coupling nako, te white design aste."
+    },
+    { 
+        id: 144, 
+        q: "Function-oriented design mainly uses:", 
+        q_hi: "Function-oriented design kya use karta hai?", 
+        options: { a: "Objects", b: "Functions", c: "Components", d: "Services" }, 
+        answer: "b", 
+        explanation: "It breaks the system down into smaller functions (like in C language).", 
+        explanation_hi: "Ye system ko chhote functions mein baant deta hai.",
+        explanation_mr: "He system la chotya functions madhe vibhagte."
+    },
+    { 
+        id: 145, 
+        q: "Object-oriented design focuses on:", 
+        q_hi: "Object-oriented design kis par focus karta hai?", 
+        options: { a: "Functions", b: "Procedures", c: "Objects", d: "Modules" }, 
+        answer: "c", 
+        explanation: "It models the system using real-world entities (Objects).", 
+        explanation_hi: "Ye real cheezon (Objects) ke hisaab se software banata hai.",
+        explanation_mr: "He kharya goshtinchya (Objects) hisobane software banavte."
+    },
+    { 
+        id: 146, 
+        q: "UML stands for:", 
+        q_hi: "UML ka full form kya hai?", 
+        options: { a: "Unified Modeling Language", b: "Universal Modeling Language", c: "Unified Markup Language", d: "User Modeling Language" }, 
+        answer: "a", 
+        explanation: "The standard language for visualizing system design.", 
+        explanation_hi: "Ye software design ka naksha banane ki standard bhasha hai.",
+        explanation_mr: "Hi software design cha nakasha banvnyachi standard bhasha ahe."
+    },
+    { 
+        id: 147, 
+        q: "Which UML diagram shows system functionality from user view?", 
+        q_hi: "User ke nazariye se system dikhane wala diagram kaunsa hai?", 
+        options: { a: "Class diagram", b: "Sequence diagram", c: "Use case diagram", d: "Activity diagram" }, 
+        answer: "c", 
+        explanation: "Use Case diagrams show actors (users) and what they do with the system.", 
+        explanation_hi: "Ye dikhata hai ki user system ke saath kya karega.",
+        explanation_mr: "He dakhavte ki user system sobat kay karel."
+    },
+    { 
+        id: 148, 
+        q: "Diagram showing object interaction over time:", 
+        q_hi: "Waqt ke saath object interaction dikhane wala diagram?", 
+        options: { a: "Activity", b: "Class", c: "Sequence", d: "Component" }, 
+        answer: "c", 
+        explanation: "Sequence diagrams show the order of messages passed between objects.", 
+        explanation_hi: "Ye dikhata hai ki kaunsa message kiske baad jayega.",
+        explanation_mr: "He dakhavte ki konta message konanantr jail."
+    },
+    { 
+        id: 149, 
+        q: "UML diagram used for workflow:", 
+        q_hi: "Workflow (kaam ka bahav) dikhane ke liye kaunsa diagram?", 
+        options: { a: "Use case", b: "Activity", c: "Class", d: "Deployment" }, 
+        answer: "b", 
+        explanation: "Activity diagrams show the flow of control step-by-step.", 
+        explanation_hi: "Ye flowchart ki tarah kaam ka step-by-step flow dikhata hai.",
+        explanation_mr: "He flowchart sarkhe kaamacha step-by-step flow dakhavte."
+    },
+    { 
+        id: 150, 
+        q: "Class diagram shows:", 
+        q_hi: "Class diagram kya dikhata hai?", 
+        options: { a: "Control flow", b: "Object lifetime", c: "Static structure", d: "Execution order" }, 
+        answer: "c", 
+        explanation: "It shows the static structure (classes, attributes, relationships) of the system.", 
+        explanation_hi: "Ye system ka dhancha (structure) dikhata hai, bina flow ke.",
+        explanation_mr: "He system cha dhancha (structure) dakhavte, flow nasatana."
+    }
+];
+
+// ARRAY 7: Git & Tools (Q151-Q175)
+const sdm_git = [
+    { 
+        id: 151, 
+        q: "Version control system helps in:", 
+        q_hi: "Version control system kisme madad karta hai?", 
+        options: { a: "Code compilation", b: "Code collaboration", c: "Code testing", d: "Code execution" }, 
+        answer: "b", 
+        explanation: "It allows multiple people to work on the same code and tracks changes.", 
+        explanation_hi: "Isse kai log ek saath code par kaam kar sakte hain.",
+        explanation_mr: "Yamule aneks lok ekatra code var kaam karu shaktat."
+    },
+    { 
+        id: 152, 
+        q: "Git is:", 
+        q_hi: "Git kya hai?", 
+        options: { a: "Centralized VCS", b: "Distributed VCS", c: "Cloud service", d: "IDE" }, 
+        answer: "b", 
+        explanation: "Git is Distributed; every developer has a full copy of the history.", 
+        explanation_hi: "Git distributed hai, har kisi ke paas code ki puri history hoti hai.",
+        explanation_mr: "Git distributed ahe, pratyekakade code chi purna history aste."
+    },
+    { 
+        id: 153, 
+        q: "Command to initialize git repository:", 
+        q_hi: "Nayi git repository shuru karne ki command?", 
+        options: { a: "git start", b: "git init", c: "git create", d: "git begin" }, 
+        answer: "b", 
+        explanation: "'git init' creates a new .git directory in the folder.", 
+        explanation_hi: "'git init' naya project shuru karne ke liye use hota hai.",
+        explanation_mr: "'git init' navin project suru karnyasathi vaparle jate."
+    },
+    { 
+        id: 154, 
+        q: "'git status' is used to:", 
+        q_hi: "'git status' kis liye use hota hai?", 
+        options: { a: "Commit changes", b: "Show repo status", c: "Push code", d: "Merge branch" }, 
+        answer: "b", 
+        explanation: "It shows which files are modified, staged, or untracked.", 
+        explanation_hi: "Ye batata hai ki kaunsi files change hui hain.",
+        explanation_mr: "He sangte ki konatya files change zalya ahet."
+    },
+    { 
+        id: 155, 
+        q: "'git add .' means:", 
+        q_hi: "'git add .' ka matlab?", 
+        options: { a: "Commit all files", b: "Track all changes", c: "Push all files", d: "Merge branches" }, 
+        answer: "b", 
+        explanation: "It adds all current changes to the staging area.", 
+        explanation_hi: "Ye saare badlav (changes) ko save karne ke liye ready karta hai.",
+        explanation_mr: "He sagla badal (changes) save karnyasathi ready karte."
+    },
+    { 
+        id: 156, 
+        q: "git branch dev:", 
+        q_hi: "git branch dev command kya karti hai?", 
+        options: { a: "Switches to dev", b: "Creates dev branch", c: "Deletes dev", d: "Merges dev" }, 
+        answer: "b", 
+        explanation: "It creates a new branch named 'dev'.", 
+        explanation_hi: "Ye 'dev' naam ki nayi branch banati hai.",
+        explanation_mr: "Hi 'dev' naavachi navin branch banavte."
+    },
+    { 
+        id: 157, 
+        q: "git checkout dev:", 
+        q_hi: "git checkout dev command kya karti hai?", 
+        options: { a: "Create dev", b: "Switch to dev", c: "Delete dev", d: "Merge dev" }, 
+        answer: "b", 
+        explanation: "'checkout' is used to switch between branches.", 
+        explanation_hi: "Ye humein 'dev' branch mein le jati hai (Switch).",
+        explanation_mr: "Hi aplyala 'dev' branch madhe gheun jate (Switch)."
+    },
+    { 
+        id: 158, 
+        q: "Merge conflict occurs when:", 
+        q_hi: "Merge conflict kab hota hai?", 
+        options: { a: "Two users edit same line", b: "Repo is empty", c: "Branch deleted", d: "Commit failed" }, 
+        answer: "a", 
+        explanation: "When Git can't decide which version of a line to keep.", 
+        explanation_hi: "Jab do log ek hi line ko alag tarah se edit karte hain.",
+        explanation_mr: "Jevha don lok ekach line la veg-veglya paddhatine edit kartat."
+    },
+    { 
+        id: 159, 
+        q: "Which command merges branches?", 
+        q_hi: "Branches ko milane wali command?", 
+        options: { a: "git pull", b: "git push", c: "git merge", d: "git fetch" }, 
+        answer: "c", 
+        explanation: "'git merge' joins two or more development histories together.", 
+        explanation_hi: "'git merge' do branches ko jodta hai.",
+        explanation_mr: "'git merge' don branches la jodte."
+    },
+    { 
+        id: 160, 
+        q: "Git HEAD points to:", 
+        q_hi: "Git HEAD kis taraf ishara karta hai?", 
+        options: { a: "Last file", b: "Current commit", c: "Branch name only", d: "Remote repo" }, 
+        answer: "b", 
+        explanation: "HEAD is a pointer to the current snapshot (commit) you are looking at.", 
+        explanation_hi: "HEAD batata hai ki aap abhi kahan (kaunse commit par) ho.",
+        explanation_mr: "HEAD sangte ki tumhi sadhya kuthe (konatya commit var) ahat."
+    },
+    { 
+        id: 161, 
+        q: "Coding conventions improve:", 
+        q_hi: "Coding conventions se kya behtar hota hai?", 
+        options: { a: "Execution speed", b: "Readability", c: "Compilation", d: "Memory" }, 
+        answer: "b", 
+        explanation: "Standard rules make code easier for humans to read.", 
+        explanation_hi: "Code padhne aur samajhne mein aasaani hoti hai.",
+        explanation_mr: "Code vachnyas ani samjun ghenyas sope hote."
+    },
+    { 
+        id: 162, 
+        q: "Clean code emphasizes:", 
+        q_hi: "Clean code kis par zor deta hai?", 
+        options: { a: "Short variable names", b: "Readability & maintainability", c: "Fewer comments", d: "Complex logic" }, 
+        answer: "b", 
+        explanation: "Code should be clear, simple, and easy to maintain.", 
+        explanation_hi: "Code saaf, simple aur maintain karne layak hona chahiye.",
+        explanation_mr: "Code saaf, simple ani maintain karnyajoga asava."
+    },
+    { 
+        id: 163, 
+        q: "Refactoring means:", 
+        q_hi: "Refactoring ka matlab?", 
+        options: { a: "Rewriting code", b: "Optimizing algorithm", c: "Improving structure without changing behavior", d: "Debugging" }, 
+        answer: "c", 
+        explanation: "Cleaning up the code's design without changing what it does.", 
+        explanation_hi: "Bina output badle code ke likhne ke tareeke ko sudharna.",
+        explanation_mr: "Output na badalta code chya lihinyachya paddhatila sudharne."
+    },
+    { 
+        id: 164, 
+        q: "Which principle says 'Don’t Repeat Yourself'?", 
+        q_hi: "Kaunsa rule kehta hai 'Repeat mat karo'?", 
+        options: { a: "KISS", b: "DRY", c: "YAGNI", d: "SOLID" }, 
+        answer: "b", 
+        explanation: "DRY = Don't Repeat Yourself. Logic should not be duplicated.", 
+        explanation_hi: "DRY ka matlab hai code copy-paste mat karo, function banao.",
+        explanation_mr: "DRY cha arth ahe code copy-paste karu naka, function banva."
+    },
+    { 
+        id: 165, 
+        q: "Which is NOT a SOLID principle?", 
+        q_hi: "Inmein se kaunsa SOLID principle nahi hai?", 
+        options: { a: "Single Responsibility", b: "Open/Closed", c: "Interface Segregation", d: "Rapid Development" }, 
+        answer: "d", 
+        explanation: "SOLID stands for Single, Open/Closed, Liskov, Interface, Dependency. Rapid isn't one.", 
+        explanation_hi: "Rapid Development SOLID ka hissa nahi hai.",
+        explanation_mr: "Rapid Development SOLID cha bhaag nahi."
+    },
+    { 
+        id: 166, 
+        q: "Agile manifesto values:", 
+        q_hi: "Agile Manifesto kisko zyada maanta hai?", 
+        options: { a: "Processes over people", b: "Documentation over working software", c: "Customer collaboration", d: "Contract negotiation" }, 
+        answer: "c", 
+        explanation: "It values 'Customer collaboration over contract negotiation'.", 
+        explanation_hi: "Customer ke saath milkar kaam karna zyada zaroori hai.",
+        explanation_mr: "Customer sobat milun kaam karne jast garjeche ahe."
+    },
+    { 
+        id: 167, 
+        q: "Agile is best suited when:", 
+        q_hi: "Agile kab sabse accha hota hai?", 
+        options: { a: "Requirements fixed", b: "Changes expected", c: "Large documentation mandatory", d: "No customer interaction" }, 
+        answer: "b", 
+        explanation: "Agile is built to handle changing requirements easily.", 
+        explanation_hi: "Jab humein pata ho ki requirements baar-baar badlengi.",
+        explanation_mr: "Jevha aplyala mahit aste ki requirements varanvar badaltil."
+    },
+    { 
+        id: 168, 
+        q: "Which is NOT an Agile principle?", 
+        q_hi: "Inmein se kaunsa Agile ka principle nahi hai?", 
+        options: { a: "Continuous delivery", b: "Embrace change", c: "Extensive documentation", d: "Customer satisfaction" }, 
+        answer: "c", 
+        explanation: "Agile prefers working software over extensive (heavy) documentation.", 
+        explanation_hi: "Agile mein moti-moti files (documentation) ki jagah kaam par focus hota hai.",
+        explanation_mr: "Agile madhe jada files (documentation) peksha kaamavar focus asto."
+    },
+    { 
+        id: 169, 
+        q: "Scrum is:", 
+        q_hi: "Scrum kya hai?", 
+        options: { a: "SDLC", b: "Agile framework", c: "Testing model", d: "DevOps tool" }, 
+        answer: "b", 
+        explanation: "Scrum is a popular framework to implement Agile.", 
+        explanation_hi: "Scrum Agile ko use karne ka ek tareeka (framework) hai.",
+        explanation_mr: "Scrum Agile la vaparnyacha ek marga (framework) ahe."
+    },
+    { 
+        id: 170, 
+        q: "Sprint duration is usually:", 
+        q_hi: "Sprint ka time kitna hota hai?", 
+        options: { a: "1 day", b: "1–4 weeks", c: "6 months", d: "Variable daily" }, 
+        answer: "b", 
+        explanation: "Sprints are fixed time-boxes, usually between 2 to 4 weeks.", 
+        explanation_hi: "Ye 1 se 4 hafte ka fix time hota hai.",
+        explanation_mr: "He 1 te 4 athavdyanche fix time aste."
+    },
+    { 
+        id: 171, 
+        q: "Product backlog contains:", 
+        q_hi: "Product backlog mein kya hota hai?", 
+        options: { a: "Tasks only", b: "User stories", c: "Test cases", d: "Bugs only" }, 
+        answer: "b", 
+        explanation: "It contains requirements expressed as User Stories.", 
+        explanation_hi: "Ismein saare kaam (User Stories) ki list hoti hai.",
+        explanation_mr: "Yat saglya kaamanchi (User Stories) list aste."
+    },
+    { 
+        id: 172, 
+        q: "Sprint backlog is owned by:", 
+        q_hi: "Sprint backlog ka malik kaun hai?", 
+        options: { a: "Product Owner", b: "Scrum Master", c: "Development Team", d: "Manager" }, 
+        answer: "c", 
+        explanation: "The Development Team decides what they can commit to in the sprint.", 
+        explanation_hi: "Development team decide karti hai ki wo sprint mein kya kaam karegi.",
+        explanation_mr: "Development team tharavte ki ti sprint madhe kay kaam karel."
+    },
+    { 
+        id: 173, 
+        q: "Daily scrum duration is:", 
+        q_hi: "Daily Scrum meeting kitni der ki hoti hai?", 
+        options: { a: "1 hour", b: "30 minutes", c: "15 minutes", d: "5 minutes" }, 
+        answer: "c", 
+        explanation: "It is a short 15-minute stand-up meeting.", 
+        explanation_hi: "Ye roz 15 minute ki choti meeting hoti hai.",
+        explanation_mr: "Hi darroz 15 mintachi choti meeting aste."
+    },
+    { 
+        id: 174, 
+        q: "Scrum Master’s role is to:", 
+        q_hi: "Scrum Master ka kaam kya hai?", 
+        options: { a: "Assign tasks", b: "Remove impediments", c: "Approve code", d: "Write stories" }, 
+        answer: "b", 
+        explanation: "The Scrum Master helps the team by removing obstacles (impediments).", 
+        explanation_hi: "Team ke raaste ki rukawatein (problems) hatana.",
+        explanation_mr: "Team chya margatil adthale (problems) dur karne."
+    },
+    { 
+        id: 175, 
+        q: "Increment in Scrum means:", 
+        q_hi: "Scrum mein 'Increment' ka matlab?", 
+        options: { a: "Unfinished code", b: "Potentially shippable product", c: "Documentation", d: "Test report" }, 
+        answer: "b", 
+        explanation: "At the end of a sprint, the work must be done and usable.", 
+        explanation_hi: "Wo kaam jo pura ho chuka hai aur customer use kar sakta hai.",
+        explanation_mr: "Te kaam je purna zale ahe ani customer vapru shakto."
+    }
+];
+
+// ARRAY 8: Agile & Frameworks (Q176-Q200)
+const sdm_agile = [
+    { 
+        id: 176, 
+        q: "Scrum framework consists of:", 
+        q_hi: "Scrum mein kya-kya hota hai?", 
+        options: { a: "Roles, artifacts, ceremonies", b: "Phases only", c: "Tools only", d: "Documentation" }, 
+        answer: "a", 
+        explanation: "Scrum has Roles (Master/PO), Artifacts (Backlogs), and Ceremonies (Meetings).", 
+        explanation_hi: "Scrum mein Roles, Cheezein (Artifacts), aur Meetings (Ceremonies) hoti hain.",
+        explanation_mr: "Scrum madhe Roles, Vastu (Artifacts), ani Meetings (Ceremonies) astat."
+    },
+    { 
+        id: 177, 
+        q: "Which role ensures Scrum is followed correctly?", 
+        q_hi: "Kaun dhyaan rakhta hai ki Scrum sahi se follow ho raha hai?", 
+        options: { a: "Product Owner", b: "Scrum Master", c: "Developer", d: "Project Manager" }, 
+        answer: "b", 
+        explanation: "The Scrum Master coaches the team on Scrum rules.", 
+        explanation_hi: "Scrum Master ka kaam hai team ko Scrum ke rules sikhana.",
+        explanation_mr: "Scrum Master che kaam ahe team la Scrum che niyam shikvne."
+    },
+    { 
+        id: 178, 
+        q: "Extreme Programming (XP) strongly emphasizes:", 
+        q_hi: "XP (Extreme Programming) kis par zor deta hai?", 
+        options: { a: "Heavy documentation", b: "Pair programming", c: "Long sprints", d: "Fixed scope" }, 
+        answer: "b", 
+        explanation: "XP is famous for Pair Programming where two devs share one PC.", 
+        explanation_hi: "Ismein do log ek hi computer par milkar coding karte hain.",
+        explanation_mr: "Yat don lok ekach computer var milun coding kartat."
+    },
+    { 
+        id: 179, 
+        q: "Which Agile practice promotes frequent feedback?", 
+        q_hi: "Jaldi feedback ke liye kaunsi Agile practice hai?", 
+        options: { a: "Long iterations", b: "Continuous integration", c: "Waterfall planning", d: "Code freeze" }, 
+        answer: "b", 
+        explanation: "CI ensures code is merged and tested often, giving fast feedback.", 
+        explanation_hi: "Roz code merge aur test karne se galtiyan jaldi pata chalti hain.",
+        explanation_mr: "Roz code merge ani test kelyane chuka lavkar samajt."
+    },
+    { 
+        id: 180, 
+        q: "User stories are usually written in the format:", 
+        q_hi: "User Story likhne ka format kya hai?", 
+        options: { a: "As a <role>, I want <feature>, so that <benefit>", b: "Given–When–Then", c: "Class–Method–Object", d: "Input–Process–Output" }, 
+        answer: "a", 
+        explanation: "Standard format: As a [User], I want [Action], so that [Goal].", 
+        explanation_hi: "Main [User] hoon, mujhe [Ye] chahiye, taaki [Ye fayda] ho.",
+        explanation_mr: "Mi [User] ahe, mala [He] have, jyamyule [Ha fayda] hoil."
+    },
+    { 
+        id: 181, 
+        q: "Jira is mainly used for:", 
+        q_hi: "Jira kiske liye use hota hai?", 
+        options: { a: "Code compilation", b: "Project and issue tracking", c: "Testing automation", d: "Deployment" }, 
+        answer: "b", 
+        explanation: "Jira is a tool to track bugs, tasks, and project progress.", 
+        explanation_hi: "Ye project ke tasks aur bugs ko track karne ka tool hai.",
+        explanation_mr: "He project che tasks ani bugs track karnayache tool ahe."
+    },
+    { 
+        id: 182, 
+        q: "In Jira, a sprint is:", 
+        q_hi: "Jira mein Sprint kya hai?", 
+        options: { a: "A bug report", b: "A fixed iteration", c: "A release", d: "A milestone" }, 
+        answer: "b", 
+        explanation: "A Sprint acts as a container for work in a specific time period.", 
+        explanation_hi: "Ye ek fix time ka dibba hai jisme hum tasks rakhte hain.",
+        explanation_mr: "He ek fix time cha dibba ahe jyat apan tasks thevto."
+    },
+    { 
+        id: 183, 
+        q: "Jira workflow defines:", 
+        q_hi: "Jira workflow kya batata hai?", 
+        options: { a: "Code execution", b: "Issue life cycle", c: "User stories", d: "Test cases" }, 
+        answer: "b", 
+        explanation: "It defines the steps an issue goes through (e.g., ToDo -> InProgress -> Done).", 
+        explanation_hi: "Task kaise aage badhega (ToDo se Done tak).",
+        explanation_mr: "Task kase pudhe jail (ToDo pasun Done paryant)."
+    },
+    { 
+        id: 184, 
+        q: "Which Jira artifact represents work items?", 
+        q_hi: "Jira mein kaam ko kya kehte hain?", 
+        options: { a: "Issues", b: "Pipelines", c: "Pods", d: "Repositories" }, 
+        answer: "a", 
+        explanation: "In Jira, everything (bug, task, story) is called an 'Issue'.", 
+        explanation_hi: "Jira mein har kaam (Bug/Task) ko 'Issue' kaha jata hai.",
+        explanation_mr: "Jira madhe pratyek kaamala (Bug/Task) 'Issue' mhantat."
+    },
+    { 
+        id: 185, 
+        q: "Kanban differs from Scrum because Kanban:", 
+        q_hi: "Kanban Scrum se alag kyun hai?", 
+        options: { a: "Uses fixed sprints", b: "Has no iterations", c: "Needs Scrum Master", d: "Uses user stories" }, 
+        answer: "b", 
+        explanation: "Kanban is a continuous flow, it doesn't use fixed 2-week sprints.", 
+        explanation_hi: "Kanban lagataar chalta hai, ismein fixed time (sprint) nahi hota.",
+        explanation_mr: "Kanban satat chalte, yat fixed time (sprint) nasat."
+    },
+    { 
+        id: 186, 
+        q: "DevOps mainly focuses on:", 
+        q_hi: "DevOps ka main focus kya hai?", 
+        options: { a: "Development only", b: "Operations only", c: "Collaboration & automation", d: "Testing only" }, 
+        answer: "c", 
+        explanation: "It unites Dev (Developers) and Ops (Operations) via automation.", 
+        explanation_hi: "Developers aur Operations team ka milkar kaam karna.",
+        explanation_mr: "Developers ani Operations team che milun kaam karne."
+    },
+    { 
+        id: 187, 
+        q: "Which DevOps practice enables frequent code integration?", 
+        q_hi: "Kaunsi practice code ko baar-baar merge karti hai?", 
+        options: { a: "Continuous Deployment", b: "Continuous Integration", c: "Continuous Monitoring", d: "Continuous Testing" }, 
+        answer: "b", 
+        explanation: "CI is the practice of merging code updates frequently.", 
+        explanation_hi: "Code ko lagataar merge karte rehna (Continuous Integration).",
+        explanation_mr: "Code la satat merge karat rahne (Continuous Integration)."
+    },
+    { 
+        id: 188, 
+        q: "CI/CD pipeline usually starts with:", 
+        q_hi: "CI/CD pipeline kahan se shuru hoti hai?", 
+        options: { a: "Deployment", b: "Monitoring", c: "Build", d: "Testing" }, 
+        answer: "c", 
+        explanation: "The first step is usually building the code (compiling).", 
+        explanation_hi: "Sabse pehle code ko build (compile) kiya jata hai.",
+        explanation_mr: "Sarvat pahile code la build (compile) kele jate."
+    },
+    { 
+        id: 189, 
+        q: "Which is NOT a DevOps benefit?", 
+        q_hi: "DevOps ka fayda kaunsa nahi hai?", 
+        options: { a: "Faster delivery", b: "Improved collaboration", c: "Reduced feedback", d: "Automation" }, 
+        answer: "c", 
+        explanation: "DevOps provides *faster* feedback, not reduced feedback.", 
+        explanation_hi: "DevOps se feedback jaldi milta hai, kam nahi hota.",
+        explanation_mr: "DevOps mule feedback lavkar milto, kami hot nahi."
+    },
+    { 
+        id: 190, 
+        q: "Infrastructure as Code (IaC) means:", 
+        q_hi: "Infrastructure as Code (IaC) ka matlab?", 
+        options: { a: "Writing infrastructure docs", b: "Manual server setup", c: "Managing infra via code", d: "Using IDE" }, 
+        answer: "c", 
+        explanation: "Managing servers/networks using script files instead of manual clicks.", 
+        explanation_hi: "Servers ko code likh kar setup karna, haath se nahi.",
+        explanation_mr: "Servers la code lihun setup karne, hatane nahi."
+    },
+    { 
+        id: 191, 
+        q: "Docker container is:", 
+        q_hi: "Docker container kya hai?", 
+        options: { a: "Virtual machine", b: "Lightweight OS instance", c: "Isolated process", d: "Hardware abstraction" }, 
+        answer: "c", 
+        explanation: "It is an isolated process that runs an app with all its libraries.", 
+        explanation_hi: "Ye ek alag chota sa dabba (process) hai jisme app chalti hai.",
+        explanation_mr: "Ha ek vegla chota dabba (process) ahe jyat app chalte."
+    },
+    { 
+        id: 192, 
+        q: "Docker image is:", 
+        q_hi: "Docker image kya hai?", 
+        options: { a: "Running container", b: "Template for container", c: "VM snapshot", d: "OS kernel" }, 
+        answer: "b", 
+        explanation: "The image is the blueprint (template) from which containers are created.", 
+        explanation_hi: "Image wo naksha (template) hai jisse container banta hai.",
+        explanation_mr: "Image to nakasha (template) ahe jyapasun container banto."
+    },
+    { 
+        id: 193, 
+        q: "In Dockerfile, 'FROM' is used to:", 
+        q_hi: "Dockerfile mein 'FROM' kiske liye use hota hai?", 
+        options: { a: "Run container", b: "Set base image", c: "Copy files", d: "Start service" }, 
+        answer: "b", 
+        explanation: "It defines the starting point (base image) like 'FROM node:18'.", 
+        explanation_hi: "Ye batata hai ki shuruwat kahan se karni hai (Base Image).",
+        explanation_mr: "He sangte ki survat kuthun karaychi ahe (Base Image)."
+    },
+    { 
+        id: 194, 
+        q: "Which command builds Docker image?", 
+        q_hi: "Docker image banane ki command?", 
+        options: { a: "docker run", b: "docker pull", c: "docker build", d: "docker exec" }, 
+        answer: "c", 
+        explanation: "'docker build' creates an image from a Dockerfile.", 
+        explanation_hi: "'docker build' command Dockerfile se image banati hai.",
+        explanation_mr: "'docker build' command Dockerfile pasun image banavte."
+    },
+    { 
+        id: 195, 
+        q: "Which command lists running containers?", 
+        q_hi: "Chalte hue containers dekhne ki command?", 
+        options: { a: "docker images", b: "docker ps", c: "docker run", d: "docker stop" }, 
+        answer: "b", 
+        explanation: "'docker ps' lists all active/running containers.", 
+        explanation_hi: "'docker ps' saare active containers dikhata hai.",
+        explanation_mr: "'docker ps' sagli active containers dakhavte."
+    },
+    { 
+        id: 196, 
+        q: "Containers differ from VMs because containers:", 
+        q_hi: "Container VM se alag kyun hai?", 
+        options: { a: "Include full OS", b: "Share host OS kernel", c: "Are slower", d: "Need hypervisor" }, 
+        answer: "b", 
+        explanation: "Containers share the host system's kernel, making them lightweight.", 
+        explanation_hi: "Containers computer ka main Kernel share karte hain, isliye halke hote hain.",
+        explanation_mr: "Containers computer cha main Kernel share kartat, mhanun halke astat."
+    },
+    { 
+        id: 197, 
+        q: "Advantage of containers is:", 
+        q_hi: "Container ka fayda kya hai?", 
+        options: { a: "Heavy isolation", b: "Fast startup", c: "More hardware usage", d: "Large size" }, 
+        answer: "b", 
+        explanation: "Since they don't boot a full OS, they start very quickly.", 
+        explanation_hi: "Ye bahut jaldi start hote hain kyunki pura OS load nahi karna padta.",
+        explanation_mr: "He khup lavkar start hotat karan purna OS load karava lagat nahi."
+    },
+    { 
+        id: 198, 
+        q: "Which layer is common across containers?", 
+        q_hi: "Containers ke beech kya common hota hai?", 
+        options: { a: "Application layer", b: "OS kernel", c: "File system", d: "Libraries" }, 
+        answer: "b", 
+        explanation: "All containers on a machine share the same OS Kernel.", 
+        explanation_hi: "Sabhi containers ek hi OS Kernel par chalte hain.",
+        explanation_mr: "Sagle containers ekach OS Kernel var chaltat."
+    },
+    { 
+        id: 199, 
+        q: "Kubernetes is used for:", 
+        q_hi: "Kubernetes kiske liye hai?", 
+        options: { a: "Source control", b: "Container orchestration", c: "CI pipeline", d: "Testing" }, 
+        answer: "b", 
+        explanation: "It manages (orchestrates) hundreds of containers automatically.", 
+        explanation_hi: "Bahut saare containers ko manage karne ke liye.",
+        explanation_mr: "Khup sare containers manage karnyasathi."
+    },
+    { 
+        id: 200, 
+        q: "Smallest deployable unit in Kubernetes is:", 
+        q_hi: "Kubernetes ki sabse choti unit kaunsi hai?", 
+        options: { a: "Node", b: "Container", c: "Pod", d: "Service" }, 
+        answer: "c", 
+        explanation: "Kubernetes manages Pods (which hold containers), not just raw containers.", 
+        explanation_hi: "Sabse choti cheez 'Pod' hoti hai, jiske andar container hota hai.",
+        explanation_mr: "Sarvat choti vastu 'Pod' aste, jya aat container aste."
+    }
+];
+
+// ARRAY 9: DevOps & K8s (Q201-Q225)
+const sdm_devops = [
+    { 
+        id: 201, 
+        q: "Kubernetes service provides:", 
+        q_hi: "Kubernetes Service kya deti hai?", 
+        options: { a: "Storage", b: "Load balancing & networking", c: "CI/CD", d: "Logging" }, 
+        answer: "b", 
+        explanation: "It gives a stable IP address and balances traffic between Pods.", 
+        explanation_hi: "Ye network ka stable address aur load balancing deta hai.",
+        explanation_mr: "He network cha stable address ani load balancing dete."
+    },
+    { 
+        id: 202, 
+        q: "Which component manages cluster state?", 
+        q_hi: "Cluster ka data kaun sambhalta hai?", 
+        options: { a: "kubelet", b: "etcd", c: "kubectl", d: "scheduler" }, 
+        answer: "b", 
+        explanation: "etcd is the database that stores all cluster data and state.", 
+        explanation_hi: "etcd wo database hai jahan cluster ki saari jaankari save hoti hai.",
+        explanation_mr: "etcd to database ahe jithe cluster chi sagli mahiti save hote."
+    },
+    { 
+        id: 203, 
+        q: "YAML is used in Kubernetes to:", 
+        q_hi: "Kubernetes mein YAML kyun use hota hai?", 
+        options: { a: "Write scripts", b: "Define configuration", c: "Run containers", d: "Compile code" }, 
+        answer: "b", 
+        explanation: "We define what we want (Pods, Services) using YAML config files.", 
+        explanation_hi: "Hum YAML files mein likhte hain ki humein kaisa system chahiye.",
+        explanation_mr: "Apan YAML files madhe lihto ki aplyala kase system have."
+    },
+    { 
+        id: 204, 
+        q: "Pod lifecycle is managed by:", 
+        q_hi: "Pod ko kaun manage karta hai?", 
+        options: { a: "Node", b: "Deployment", c: "Service", d: "Docker" }, 
+        answer: "b", 
+        explanation: "A Deployment controller manages creating and updating Pods.", 
+        explanation_hi: "'Deployment' controller Pods ko banata aur update karta hai.",
+        explanation_mr: "'Deployment' controller Pods la banavte ani update karte."
+    },
+    { 
+        id: 205, 
+        q: "ReplicaSet ensures:", 
+        q_hi: "ReplicaSet kya pakka karta hai?", 
+        options: { a: "Logging", b: "Fixed number of Pods", c: "Networking", d: "Storage" }, 
+        answer: "b", 
+        explanation: "It ensures that a specific number of Pod copies are always running.", 
+        explanation_hi: "Ye dhyan rakhta hai ki hamesha utne Pods chalte rahein jitne chahiye.",
+        explanation_mr: "He laksha thevte ki nehmi titke Pods chalat rahtil jitke have ahet."
+    },
+    { 
+        id: 206, 
+        q: "Which command deploys resources to cluster?", 
+        q_hi: "Resources deploy karne ki command?", 
+        options: { a: "docker run", b: "kubectl apply", c: "git push", d: "mvn install" }, 
+        answer: "b", 
+        explanation: "'kubectl apply -f file.yaml' is the standard command.", 
+        explanation_hi: "'kubectl apply' se hum configuration file ko cluster par bhejte hain.",
+        explanation_mr: "'kubectl apply' ne apan configuration file la cluster var pathavto."
+    },
+    { 
+        id: 207, 
+        q: "Kubernetes Dashboard is used for:", 
+        q_hi: "Kubernetes Dashboard ka kya kaam hai?", 
+        options: { a: "CLI operations", b: "Monitoring cluster visually", c: "CI/CD", d: "Image building" }, 
+        answer: "b", 
+        explanation: "It is a web-based UI to see and manage the cluster.", 
+        explanation_hi: "Ye cluster ko dekhne aur chalane ke liye ek graphic screen hai.",
+        explanation_mr: "He cluster la pahanyasathi ani chalvnyasathi ek graphic screen ahe."
+    },
+    { 
+        id: 208, 
+        q: "Continuous Deployment differs from Continuous Delivery because deployment is:", 
+        q_hi: "Deployment aur Delivery mein kya farak hai?", 
+        options: { a: "Manual", b: "Automatic", c: "Partial", d: "Not tested" }, 
+        answer: "b", 
+        explanation: "In Continuous Deployment, the release to production is fully automatic.", 
+        explanation_hi: "Continuous Deployment mein code khud-ba-khud live ho jata hai (automatic).",
+        explanation_mr: "Continuous Deployment madhe code apoap live hoto (automatic)."
+    },
+    { 
+        id: 209, 
+        q: "Which tool is commonly used for CI/CD?", 
+        q_hi: "CI/CD ke liye kaunsa tool famous hai?", 
+        options: { a: "Jira", b: "Jenkins", c: "Docker", d: "GitHub" }, 
+        answer: "b", 
+        explanation: "Jenkins is the most widely used automation server for CI/CD.", 
+        explanation_hi: "Jenkins sabse zyada use hone wala automation tool hai.",
+        explanation_mr: "Jenkins sarvat jast vaparla janara automation tool ahe."
+    },
+    { 
+        id: 210, 
+        q: "Jenkins pipeline is written in:", 
+        q_hi: "Jenkins pipeline kis bhasha mein likhi jati hai?", 
+        options: { a: "XML", b: "YAML", c: "Groovy", d: "JSON" }, 
+        answer: "c", 
+        explanation: "Jenkinsfiles use Groovy syntax.", 
+        explanation_hi: "Jenkinsfile 'Groovy' language mein likhi jati hai.",
+        explanation_mr: "Jenkinsfile 'Groovy' language madhe lihili jate."
+    },
+    { 
+        id: 211, 
+        q: "Which DevOps phase comes after build?", 
+        q_hi: "Build ke baad kaunsa phase aata hai?", 
+        options: { a: "Code", b: "Test", c: "Plan", d: "Monitor" }, 
+        answer: "b", 
+        explanation: "After building the code, it must be Tested.", 
+        explanation_hi: "Code banne (build) ke baad uski Testing hoti hai.",
+        explanation_mr: "Code banlya (build) nantr tyachi Testing hote."
+    },
+    { 
+        id: 212, 
+        q: "Which practice shifts testing earlier?", 
+        q_hi: "Testing ko jaldi shuru karne ko kya kehte hain?", 
+        options: { a: "Shift-left testing", b: "Waterfall", c: "Code freeze", d: "Big bang" }, 
+        answer: "a", 
+        explanation: "Shift-left means moving testing to the early stages of development.", 
+        explanation_hi: "Shift-left ka matlab hai shuruwat mein hi testing karna.",
+        explanation_mr: "Shift-left cha arth ahe survatich testing karne."
+    },
+    { 
+        id: 213, 
+        q: "Blue–Green deployment helps in:", 
+        q_hi: "Blue-Green deployment kisme madad karta hai?", 
+        options: { a: "Load balancing", b: "Zero downtime deployment", c: "Faster testing", d: "Security" }, 
+        answer: "b", 
+        explanation: "It allows switching users to the new version instantly without stopping the system.", 
+        explanation_hi: "Bina system band kiye naye version par switch karna (Zero downtime).",
+        explanation_mr: "System band na karta navin version var switch karne (Zero downtime)."
+    },
+    { 
+        id: 214, 
+        q: "Canary deployment releases:", 
+        q_hi: "Canary deployment mein release kise milta hai?", 
+        options: { a: "To all users", b: "To selected users", c: "To developers only", d: "To QA team" }, 
+        answer: "b", 
+        explanation: "It releases the update to a small percentage of users first.", 
+        explanation_hi: "Pehle thode se logon ko update diya jata hai check karne ke liye.",
+        explanation_mr: "Pahile thodya lokanna update dile jate check karnyasathi."
+    },
+    { 
+        id: 215, 
+        q: "Which is NOT a Kubernetes object?", 
+        q_hi: "Inmein se kaunsa Kubernetes object nahi hai?", 
+        options: { a: "Pod", b: "Service", c: "Node", d: "Commit" }, 
+        answer: "d", 
+        explanation: "Commit is a Git concept, not a Kubernetes object.", 
+        explanation_hi: "'Commit' Git ka shabd hai, Kubernetes ka nahi.",
+        explanation_mr: "'Commit' Git cha shabd ahe, Kubernetes cha nahi."
+    },
+    { 
+        id: 216, 
+        q: "Docker volume is used for:", 
+        q_hi: "Docker volume kis liye use hota hai?", 
+        options: { a: "Networking", b: "Persistent storage", c: "Logging", d: "Security" }, 
+        answer: "b", 
+        explanation: "Volumes allow data to survive even if the container is deleted.", 
+        explanation_hi: "Container delete hone par bhi data bachane ke liye (Storage).",
+        explanation_mr: "Container delete zalyavar pan data vachvnyasathi (Storage)."
+    },
+    { 
+        id: 217, 
+        q: "Which YAML indentation is correct?", 
+        q_hi: "YAML mein sahi spacing kya hai?", 
+        options: { a: "Tabs", b: "Spaces only", c: "Both", d: "Any" }, 
+        answer: "b", 
+        explanation: "YAML strictly uses spaces (usually 2), tabs cause errors.", 
+        explanation_hi: "YAML mein sirf Space use hoti hai, Tab use karne se error aata hai.",
+        explanation_mr: "YAML madhe fakta Space vaparltat, Tab vaparlyas error yeto."
+    },
+    { 
+        id: 218, 
+        q: "Which command stops a running container?", 
+        q_hi: "Chalte hue container ko rokne ki command?", 
+        options: { a: "docker stop", b: "docker kill", c: "docker rm", d: "docker build" }, 
+        answer: "a", 
+        explanation: "'docker stop' gracefully stops the container.", 
+        explanation_hi: "'docker stop' container ko araam se band karta hai.",
+        explanation_mr: "'docker stop' container la araamat band karte."
+    },
+    { 
+        id: 219, 
+        q: "Which DevOps metric measures deployment frequency?", 
+        q_hi: "Hum kitni baar update bhej rahe hain, ye kaun napta hai?", 
+        options: { a: "MTTR", b: "Lead time", c: "Deployment frequency", d: "Change failure rate" }, 
+        answer: "c", 
+        explanation: "Deployment Frequency tracks how often code is deployed to production.", 
+        explanation_hi: "Ye dekhta hai ki hum kitni jaldi-jaldi naya code live kar rahe hain.",
+        explanation_mr: "He baghte ki apan kiti lavkar-lavkar navin code live karat ahot."
+    },
+    { 
+        id: 220, 
+        q: "Jenkins slave node is used to:", 
+        q_hi: "Jenkins slave node kis liye use hota hai?", 
+        options: { a: "Manage UI", b: "Distribute builds", c: "Store code", d: "Test UI" }, 
+        answer: "b", 
+        explanation: "It runs the actual build jobs to reduce load on the master node.", 
+        explanation_hi: "Ye kaam ko baantne (distribute) ke liye use hota hai taaki master par load na aaye.",
+        explanation_mr: "He kaam vatnyasathi (distribute) vaparle jate jyamyule master var load yet nahi."
+    },
+    { 
+        id: 221, 
+        q: "Which file defines Jenkins pipeline?", 
+        q_hi: "Jenkins pipeline kis file mein hoti hai?", 
+        options: { a: "Dockerfile", b: "pom.xml", c: "Jenkinsfile", d: "YAML" }, 
+        answer: "c", 
+        explanation: "The configuration is stored in a file named 'Jenkinsfile'.", 
+        explanation_hi: "Saari settings 'Jenkinsfile' naam ki file mein hoti hain.",
+        explanation_mr: "Sagli settings 'Jenkinsfile' navachya file madhe astat."
+    },
+    { 
+        id: 222, 
+        q: "Maven is mainly used for:", 
+        q_hi: "Maven kiske liye use hota hai?", 
+        options: { a: "Deployment", b: "Build automation", c: "Version control", d: "Containerization" }, 
+        answer: "b", 
+        explanation: "Maven is a build automation tool (mostly for Java).", 
+        explanation_hi: "Ye Java projects ko build (compile) karne ke liye use hota hai.",
+        explanation_mr: "He Java projects la build (compile) karnyasathi vaparle jate."
+    },
+    { 
+        id: 223, 
+        q: "Which tool manages Selenium tests in CI?", 
+        q_hi: "CI mein Selenium tests kaun chalata hai?", 
+        options: { a: "Jira", b: "Jenkins", c: "Docker", d: "Git" }, 
+        answer: "b", 
+        explanation: "Jenkins triggers and manages the execution of Selenium tests.", 
+        explanation_hi: "Jenkins Selenium tests ko automatically start karta hai.",
+        explanation_mr: "Jenkins Selenium tests la automatically start karte."
+    },
+    { 
+        id: 224, 
+        q: "DevOps feedback loop improves:", 
+        q_hi: "DevOps feedback loop se kya sudharta hai?", 
+        options: { a: "Code size", b: "Release delay", c: "Quality & speed", d: "Documentation" }, 
+        answer: "c", 
+        explanation: "Faster feedback leads to better quality and faster delivery.", 
+        explanation_hi: "Jaldi feedback milne se quality aur speed dono badhti hain.",
+        explanation_mr: "Lavkar feedback milalyane quality ani speed donhi vadhtat."
+    },
+    { 
+        id: 225, 
+        q: "Which practice ensures code is always deployable?", 
+        q_hi: "Kaunsi practice code ko hamesha ready rakhti hai?", 
+        options: { a: "Continuous Integration", b: "Continuous Delivery", c: "Continuous Monitoring", d: "Continuous Planning" }, 
+        answer: "b", 
+        explanation: "CD ensures the software can be released to production at any time.", 
+        explanation_hi: "Continuous Delivery ka matlab hai code hamesha release ke liye taiyar hai.",
+        explanation_mr: "Continuous Delivery cha arth ahe code nehmi release sathi tayar ahe."
+    }
+];
+
+// ARRAY 10: Testing (Q226-Q250)
+const sdm_testing = [
+    { 
+        id: 226, 
+        q: "Software testing mainly aims to:", 
+        q_hi: "Testing ka main maksad kya hai?", 
+        options: { a: "Prove software is correct", b: "Find defects", c: "Improve performance", d: "Reduce documentation" }, 
+        answer: "b", 
+        explanation: "The goal is to discover bugs/defects before the user does.", 
+        explanation_hi: "Galtiyan (bugs) dhoondhna taaki user ko problem na aaye.",
+        explanation_mr: "Chuka (bugs) shodhne jyamyule user la problem yenar nahi."
+    },
+    { 
+        id: 227, 
+        q: "Verification focuses on:", 
+        q_hi: "Verification kis par focus karta hai?", 
+        options: { a: "Are we building the product right?", b: "Are we building the right product?", c: "User satisfaction", d: "Execution results" }, 
+        answer: "a", 
+        explanation: "Verification checks process/logic: 'Are we building it correctly?'", 
+        explanation_hi: "Kya hum ise sahi tareeke se bana rahe hain?",
+        explanation_mr: "Kay apan he yogya paddhatine banvat ahot?"
+    },
+    { 
+        id: 228, 
+        q: "Validation focuses on:", 
+        q_hi: "Validation kis par focus karta hai?", 
+        options: { a: "Static analysis", b: "Requirement review", c: "User acceptance", d: "Code inspection" }, 
+        answer: "c", 
+        explanation: "Validation checks the final product: 'Did we build the right thing for the user?'", 
+        explanation_hi: "Kya humne wo banaya jo user ko chahiye tha?",
+        explanation_mr: "Kay apan te banavle je user la have hote?"
+    },
+    { 
+        id: 229, 
+        q: "Which testing is done without executing code?", 
+        q_hi: "Bina code chalaye kaunsi testing hoti hai?", 
+        options: { a: "Unit testing", b: "Integration testing", c: "Static testing", d: "System testing" }, 
+        answer: "c", 
+        explanation: "Static testing involves reviewing docs and code without running it.", 
+        explanation_hi: "Static testing mein bas padh kar check kiya jata hai, chala kar nahi.",
+        explanation_mr: "Static testing madhe fakta vachun check kele jate, chalvun nahi."
+    },
+    { 
+        id: 230, 
+        q: "Which testing ensures business requirements are met?", 
+        q_hi: "Business requirements check karne ke liye kaunsi testing hai?", 
+        options: { a: "Unit", b: "Integration", c: "System", d: "Acceptance" }, 
+        answer: "d", 
+        explanation: "Acceptance Testing confirms the software meets business needs.", 
+        explanation_hi: "Acceptance Testing pakka karti hai ki business ka kaam ho raha hai.",
+        explanation_mr: "Acceptance Testing pakka karte ki business che kaam hot ahe."
+    },
+    { 
+        id: 231, 
+        q: "STLC stands for:", 
+        q_hi: "STLC ka full form kya hai?", 
+        options: { a: "Software Test Life Cycle", b: "System Test Level Cycle", c: "Software Technical Life Cycle", d: "System Testing Logic Cycle" }, 
+        answer: "a", 
+        explanation: "The lifecycle of testing activities.", 
+        explanation_hi: "Testing ki puri process (Life Cycle).",
+        explanation_mr: "Testing chi purna process (Life Cycle)."
+    },
+    { 
+        id: 232, 
+        q: "First level of testing is:", 
+        q_hi: "Testing ka pehla level kaunsa hai?", 
+        options: { a: "System", b: "Integration", c: "Unit", d: "Acceptance" }, 
+        answer: "c", 
+        explanation: "Unit testing checks individual components and is done first.", 
+        explanation_hi: "Sabse pehle Unit testing hoti hai (chhote hisson ki).",
+        explanation_mr: "Sarvat pahile Unit testing hote (chotya bhaganchi)."
+    },
+    { 
+        id: 233, 
+        q: "Integration testing focuses on:", 
+        q_hi: "Integration testing kis par focus karti hai?", 
+        options: { a: "Individual modules", b: "Module interaction", c: "User requirements", d: "Performance" }, 
+        answer: "b", 
+        explanation: "It checks if two modules communicate/interact correctly.", 
+        explanation_hi: "Ye check karta hai ki do hisse aapas mein sahi baat kar rahe hain ya nahi.",
+        explanation_mr: "He check karte ki don bhaag apapsat barobar bolat ahet ki nahi."
+    },
+    { 
+        id: 234, 
+        q: "Alpha testing is performed by:", 
+        q_hi: "Alpha testing kaun karta hai?", 
+        options: { a: "End users", b: "Developers", c: "Testers at client site", d: "Independent testers" }, 
+        answer: "b", 
+        explanation: "Alpha testing is done internally by developers/testers before releasing.", 
+        explanation_hi: "Ye company ke andar hi developers ya testers karte hain.",
+        explanation_mr: "He company chya aatach developers kiva testers kartat."
+    },
+    { 
+        id: 235, 
+        q: "Beta testing is performed by:", 
+        q_hi: "Beta testing kaun karta hai?", 
+        options: { a: "Developers", b: "Internal testers", c: "Selected users", d: "Automation tools" }, 
+        answer: "c", 
+        explanation: "Beta testing is done by real users in a real environment.", 
+        explanation_hi: "Ye asli users karte hain final release se pehle.",
+        explanation_mr: "He khare users kartat final release chya agodar."
+    },
+    { 
+        id: 236, 
+        q: "In V-Model, coding corresponds to:", 
+        q_hi: "V-Model mein Coding ke saath kya juda hai?", 
+        options: { a: "Unit testing", b: "Integration testing", c: "System testing", d: "Acceptance testing" }, 
+        answer: "a", 
+        explanation: "Unit tests verify the specific code written during the coding phase.", 
+        explanation_hi: "Coding ke turant baad Unit testing hoti hai.",
+        explanation_mr: "Coding chya lagach nantr Unit testing hote."
+    },
+    { 
+        id: 237, 
+        q: "V-Model advantage is:", 
+        q_hi: "V-Model ka fayda kya hai?", 
+        options: { a: "No documentation", b: "Early test planning", c: "Late feedback", d: "No validation" }, 
+        answer: "b", 
+        explanation: "Testing is planned early, right alongside development phases.", 
+        explanation_hi: "Ismein testing ki planning shuru se hi ho jati hai.",
+        explanation_mr: "Yat testing chi planning survatipasunach hote."
+    },
+    { 
+        id: 238, 
+        q: "Which testing maps to SRS in V-Model?", 
+        q_hi: "SRS ke hisaab se kaunsi testing hoti hai?", 
+        options: { a: "Unit", b: "Integration", c: "System", d: "Acceptance" }, 
+        answer: "d", 
+        explanation: "Acceptance testing verifies if the initial Requirements (SRS) are met.", 
+        explanation_hi: "SRS (Requirements) ko check karne ke liye Acceptance testing hoti hai.",
+        explanation_mr: "SRS (Requirements) la check karnyasathi Acceptance testing hote."
+    },
+    { 
+        id: 239, 
+        q: "Black-box testing is based on:", 
+        q_hi: "Black-box testing kis par based hai?", 
+        options: { a: "Code structure", b: "Internal logic", c: "Input–output behavior", d: "Control flow" }, 
+        answer: "c", 
+        explanation: "Tester doesn't see code, just checks Input -> Output.", 
+        explanation_hi: "Ismein andar ka code nahi dekhte, bas input aur output check karte hain.",
+        explanation_mr: "Yat aatla code baghat nahit, fakta input ani output check kartat."
+    },
+    { 
+        id: 240, 
+        q: "White-box testing requires knowledge of:", 
+        q_hi: "White-box testing ke liye kya aana chahiye?", 
+        options: { a: "Requirements", b: "Source code", c: "UI", d: "Test data" }, 
+        answer: "b", 
+        explanation: "Tester needs to know the internal code logic.", 
+        explanation_hi: "Iske liye code ki jaankari honi zaroori hai.",
+        explanation_mr: "Yasathi code chi mahiti asne garjeche ahe."
+    },
+    { 
+        id: 241, 
+        q: "Grey-box testing combines:", 
+        q_hi: "Grey-box testing kiska mixture hai?", 
+        options: { a: "Unit + System", b: "Manual + Automation", c: "Black-box + White-box", d: "Functional + Performance" }, 
+        answer: "c", 
+        explanation: "It combines knowledge of code (White) with functional testing (Black).", 
+        explanation_hi: "Ye Black-box aur White-box dono ka combination hai.",
+        explanation_mr: "He Black-box ani White-box doghanche combination ahe."
+    },
+    { 
+        id: 242, 
+        q: "Automation testing is best suited for:", 
+        q_hi: "Automation testing kahan sabse acchi hai?", 
+        options: { a: "Exploratory testing", b: "Regression testing", c: "Ad-hoc testing", d: "Usability testing" }, 
+        answer: "b", 
+        explanation: "Regression (repeating tests) is boring for humans, best for robots.", 
+        explanation_hi: "Bar-bar check karne (Regression) ke liye automation best hai.",
+        explanation_mr: "Varanvar check karnyastahi (Regression) automation best ahe."
+    },
+    { 
+        id: 243, 
+        q: "Selenium is mainly used for:", 
+        q_hi: "Selenium kiske liye use hota hai?", 
+        options: { a: "API testing", b: "Mobile testing", c: "Web application testing", d: "Desktop testing" }, 
+        answer: "c", 
+        explanation: "Selenium is a tool for automating web browsers.", 
+        explanation_hi: "Ye websites ko test karne ke liye use hota hai.",
+        explanation_mr: "He websites la test karnyasathi vaparle jate."
+    },
+    { 
+        id: 244, 
+        q: "Selenium WebDriver supports:", 
+        q_hi: "Selenium WebDriver kya support karta hai?", 
+        options: { a: "Only Java", b: "Only Python", c: "Multiple languages", d: "No programming" }, 
+        answer: "c", 
+        explanation: "It supports Java, Python, C#, Ruby, etc.", 
+        explanation_hi: "Ye bahut saari languages (Java, Python, etc.) support karta hai.",
+        explanation_mr: "He khup sarya languages (Java, Python, etc.) support karte."
+    },
+    { 
+        id: 245, 
+        q: "Which Selenium component records user actions?", 
+        q_hi: "Kaunsa Selenium tool actions record karta hai?", 
+        options: { a: "WebDriver", b: "IDE", c: "Grid", d: "RC" }, 
+        answer: "b", 
+        explanation: "Selenium IDE is a record-and-playback tool.", 
+        explanation_hi: "IDE hamare clicks ko record karta hai.",
+        explanation_mr: "IDE aple clicks record karte."
+    },
+    { 
+        id: 246, 
+        q: "Jenkins is primarily a:", 
+        q_hi: "Jenkins asal mein kya hai?", 
+        options: { a: "Version control tool", b: "CI/CD automation server", c: "Container tool", d: "Testing framework" }, 
+        answer: "b", 
+        explanation: "It is a server that automates parts of software development.", 
+        explanation_hi: "Ye software banane ke kaam ko automatic karne wala server hai.",
+        explanation_mr: "He software banvanyache kaam automatic karnara server ahe."
+    },
+    { 
+        id: 247, 
+        q: "Jenkins job is triggered automatically by:", 
+        q_hi: "Jenkins job apne aap kaise shuru hoti hai?", 
+        options: { a: "Manual click only", b: "Git commit (Webhook)", c: "OS boot", d: "Docker image" }, 
+        answer: "b", 
+        explanation: "A Webhook from Git tells Jenkins 'New code arrived, start working'.", 
+        explanation_hi: "Jab Git mein code aata hai (commit), Jenkins shuru ho jata hai.",
+        explanation_mr: "Jevha Git madhe code yeto (commit), Jenkins suru hoto."
+    },
+    { 
+        id: 248, 
+        q: "Pipeline failure should ideally:", 
+        q_hi: "Agar pipeline fail ho jaye to kya hona chahiye?", 
+        options: { a: "Be ignored", b: "Stop deployment", c: "Skip testing", d: "Continue delivery" }, 
+        answer: "b", 
+        explanation: "If a test fails, deployment must stop to prevent bad code going live.", 
+        explanation_hi: "Agar fail ho jaye to deployment rok deni chahiye.",
+        explanation_mr: "Jar fail zale tar deployment rokhli pahije."
+    },
+    { 
+        id: 249, 
+        q: "Which stage usually comes after test in pipeline?", 
+        q_hi: "Pipeline mein test ke baad kya aata hai?", 
+        options: { a: "Build", b: "Code", c: "Deploy", d: "Plan" }, 
+        answer: "c", 
+        explanation: "Build -> Test -> Deploy.", 
+        explanation_hi: "Test pass hone ke baad code Deploy (live) hota hai.",
+        explanation_mr: "Test pass zalyavar code Deploy (live) hoto."
+    },
+    { 
+        id: 250, 
+        q: "Main goal of CI/CD is:", 
+        q_hi: "CI/CD ka main lakshya kya hai?", 
+        options: { a: "More documentation", b: "Faster and reliable releases", c: "Reduce testing", d: "Manual deployment" }, 
+        answer: "b", 
+        explanation: "To release software quickly and safely.", 
+        explanation_hi: "Software ko jaldi aur bina galti ke release karna.",
+        explanation_mr: "Software la lavkar ani chuka nasatana release karne."
+    }
+];
+        const osParts = [os_part1, os_part2, os_part3, os_part4, os_part5];
+        const sdmParts = [sdm_lifecycle, sdm_git, sdm_agile, sdm_devops, sdm_testing];
+
+        // --- APP STATE & JS LOGIC ---
+        let currentLevelQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userName = "Admin";
+        let isHinglishMode = false;
+        let selectedDomain = "OS"; // 'OS' or 'SDM'
+
+        const screens = {
+            welcome: document.getElementById('welcome-screen'),
+            domain: document.getElementById('domain-screen'),
+            selection: document.getElementById('selection-screen'),
+            quiz: document.getElementById('quiz-screen'),
+            result: document.getElementById('result-screen')
+        };
+        const ui = {
+            questionText: document.getElementById('question-text'),
+            optionsContainer: document.getElementById('options-container'),
+            nextBtn: document.getElementById('next-btn'),
+            progressBar: document.getElementById('progress-bar'),
+            qNumber: document.getElementById('q-number'),
+            qTotal: document.getElementById('total-q'),
+            explanationBox: document.getElementById('explanation-box'),
+            explanationText: document.getElementById('explanation-text'),
+            currentScore: document.getElementById('current-score'),
+            headerStats: document.getElementById('header-stats'),
+            displayName: document.getElementById('display-name'),
+            scoreCircle: document.getElementById('score-circle'),
+            selectionTitle: document.getElementById('selection-title'),
+            osGrid: document.getElementById('os-grid'),
+            sdmGrid: document.getElementById('sdm-grid')
+        };
+
+        function goToDomainSelection() {
+            const inputName = document.getElementById('username').value.trim();
+            if (inputName) userName = inputName;
+            ui.displayName.innerText = userName;
+            showScreen('domain');
+        }
+
+        function selectDomain(domain) {
+            selectedDomain = domain;
+            
+            // Update UI based on Domain
+            if (domain === 'OS') {
+                ui.selectionTitle.innerText = "KERNEL ARCHITECTURE";
+                ui.selectionTitle.classList.remove('text-neon-yellow');
+                ui.selectionTitle.classList.add('text-neon-purple');
+                ui.osGrid.classList.remove('hidden');
+                ui.sdmGrid.classList.add('hidden');
+            } else {
+                ui.selectionTitle.innerText = "SOFTWARE LIFECYCLE";
+                ui.selectionTitle.classList.remove('text-neon-purple');
+                ui.selectionTitle.classList.add('text-neon-yellow');
+                ui.osGrid.classList.add('hidden');
+                ui.sdmGrid.classList.remove('hidden');
+            }
+            showScreen('selection');
+        }
+
+        function startLevel(levelIndex) {
+            // Determine which array to load
+            if (selectedDomain === 'OS') {
+                currentLevelQuestions = osParts[levelIndex - 1];
+            } else {
+                currentLevelQuestions = sdmParts[levelIndex - 1];
+            }
+
+            currentQuestionIndex = 0;
+            score = 0;
+            ui.currentScore.innerText = '0';
+            updateScoreCircle(0);
+            ui.qTotal.innerText = currentLevelQuestions.length;
+            
+            ui.headerStats.classList.remove('hidden');
+            ui.headerStats.classList.add('flex');
+            showScreen('quiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = currentLevelQuestions[currentQuestionIndex];
+            ui.questionText.style.opacity = '0';
+            setTimeout(() => {
+                ui.qNumber.innerText = String(currentQuestionIndex + 1).padStart(2, '0');
+                ui.questionText.innerHTML = isHinglishMode && q.q_hi ? q.q_hi : q.q;
+                ui.questionText.style.opacity = '1';
+            }, 200);
+
+            const progress = ((currentQuestionIndex) / currentLevelQuestions.length) * 100;
+            ui.progressBar.style.width = `${progress}%`;
+
+            ui.explanationBox.classList.add('hidden');
+            
+            ui.nextBtn.disabled = true;
+            ui.nextBtn.classList.remove('border-neon-cyan', 'text-neon-cyan', 'shadow-neon-cyan');
+            ui.nextBtn.classList.add('border-gray-700', 'text-gray-500');
+            
+            renderOptions(q);
+        }
+
+        function renderOptions(q) {
+            ui.optionsContainer.innerHTML = '';
+            for (const [key, value] of Object.entries(q.options)) {
+                const btn = document.createElement('button');
+                btn.className = `option-btn w-full text-left p-5 rounded-md bg-black/60 border-2 border-gray-800 flex items-center gap-6 transition-all hover:border-neon-cyan hover:shadow-neon-cyan group relative overflow-hidden`;
+                btn.id = `opt-${key}`;
+                btn.onclick = () => checkAnswer(key, btn);
+                
+                btn.innerHTML = `
+                    <div class="absolute inset-0 bg-neon-cyan/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <span class="w-10 h-10 rounded-sm bg-black border border-gray-700 flex items-center justify-center text-base font-bold text-gray-500 group-hover:border-neon-cyan group-hover:text-neon-cyan transition-colors relative z-10 font-mono">${key.toUpperCase()}</span>
+                    <span class="text-gray-300 text-xl flex-1 group-hover:text-white transition-colors relative z-10 tracking-wide">${value}</span>
+                    <i class="bi bi-check-square-fill text-neon-green hidden check-icon text-2xl scale-0 transition-transform duration-300 relative z-10 shadow-neon-green"></i>
+                    <i class="bi bi-x-square-fill text-neon-red hidden cross-icon text-2xl scale-0 transition-transform duration-300 relative z-10 shadow-neon-red"></i>
+                `;
+                ui.optionsContainer.appendChild(btn);
+            }
+        }
+
+        function checkAnswer(selectedKey, selectedBtn) {
+            document.querySelectorAll('.option-btn').forEach(b => {
+                b.disabled = true;
+                b.classList.remove('hover:border-neon-cyan', 'hover:shadow-neon-cyan');
+                b.style.cursor = 'default';
+            });
+
+            const q = currentLevelQuestions[currentQuestionIndex];
+            const isCorrect = selectedKey === q.answer;
+            const correctBtn = document.getElementById(`opt-${q.answer}`);
+
+            if (isCorrect) {
+                styleButton(selectedBtn, 'correct');
+                score++;
+                ui.currentScore.innerText = score;
+                updateScoreCircle((score / currentLevelQuestions.length) * 100);
+                triggerConfetti(0.4); 
+            } else {
+                styleButton(selectedBtn, 'wrong');
+                styleButton(correctBtn, 'correct');
+            }
+
+            ui.explanationBox.classList.remove('hidden');
+            setExpLang('en');
+
+            ui.nextBtn.disabled = false;
+            ui.nextBtn.classList.remove('border-gray-700', 'text-gray-500');
+            ui.nextBtn.classList.add('border-neon-cyan', 'text-neon-cyan', 'shadow-neon-cyan');
+            
+            if (currentQuestionIndex === currentLevelQuestions.length - 1) {
+                ui.nextBtn.querySelector('span').innerHTML = `TERMINATE <i class="bi bi-power"></i>`;
+            }
+        }
+
+        function styleButton(btn, type) {
+            btn.classList.remove('border-gray-800');
+            if (type === 'correct') {
+                btn.classList.add('bg-neon-green/10', 'border-neon-green', 'shadow-neon-green');
+                const icon = btn.querySelector('.check-icon');
+                icon.classList.remove('hidden');
+                setTimeout(() => icon.classList.remove('scale-0'), 50);
+            } else {
+                btn.classList.add('bg-neon-red/10', 'border-neon-red', 'shadow-neon-red');
+                const icon = btn.querySelector('.cross-icon');
+                icon.classList.remove('hidden');
+                setTimeout(() => icon.classList.remove('scale-0'), 50);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentLevelQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            showScreen('result');
+            ui.headerStats.classList.add('hidden'); 
+            
+            document.getElementById('result-name').innerText = userName;
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-total').innerText = currentLevelQuestions.length;
+            
+            const percent = Math.round((score / currentLevelQuestions.length) * 100);
+            document.getElementById('score-percent').innerText = `${percent}%`;
+
+            if (percent > 60) {
+                setTimeout(() => triggerConfetti(1), 500);
+            }
+        }
+
+        function toggleQuestionLanguage() {
+            const toggle = document.getElementById('lang-toggle');
+            isHinglishMode = toggle.checked;
+            const indicator = document.getElementById('toggle-indicator');
+            indicator.innerText = isHinglishMode ? "HING" : "ENG";
+            const q = currentLevelQuestions[currentQuestionIndex];
+            if (q) ui.questionText.innerHTML = isHinglishMode && q.q_hi ? q.q_hi : q.q;
+        }
+
+        function setExpLang(lang) {
+            const q = currentLevelQuestions[currentQuestionIndex];
+            if (!q) return;
+            if (lang === 'en') ui.explanationText.innerText = q.explanation;
+            else if (lang === 'hi') ui.explanationText.innerText = q.explanation_hi;
+            else if (lang === 'mr') ui.explanationText.innerText = q.explanation_mr;
+
+            ['en','hi','mr'].forEach(l => {
+                const btn = document.getElementById(`btn-${l}`);
+                if (l === lang) {
+                    btn.classList.remove('text-neon-purple');
+                    btn.classList.add('bg-neon-purple', 'text-black', 'shadow-neon-purple');
+                } else {
+                    btn.classList.add('text-neon-purple');
+                    btn.classList.remove('bg-neon-purple', 'text-black', 'shadow-neon-purple');
+                }
+            });
+        }
+
+        function showScreen(screenName) {
+            Object.values(screens).forEach(s => s.classList.add('hidden'));
+            screens[screenName].classList.remove('hidden');
+            screens[screenName].classList.add('screen-transition');
+        }
+
+        function updateScoreCircle(percent) {
+            const offset = 150.8 - (150.8 * percent) / 100;
+            ui.scoreCircle.style.strokeDashoffset = offset;
+        }
+
+        function restartLevel() {
+            let partsArray = selectedDomain === 'OS' ? osParts : sdmParts;
+            startLevel(partsArray.indexOf(currentLevelQuestions) + 1);
+        }
+
+        function triggerConfetti(amount) {
+            confetti({
+                particleCount: 150 * amount, 
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#00f7ff', '#bd00ff', '#39ff14', '#fbbf24']
+            });
+        }
+    </script>
+</body>
+</html>
